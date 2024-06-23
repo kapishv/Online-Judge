@@ -1,16 +1,17 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./Header";
-import Navbar from "./Navbar";
-import Home from "./Home";
-import Problems from "./Problems";
-import Submissions from "./Submissions";
-import Leaderboard from "./Leaderboard";
-import Login from "./Login";
-import Profile from "./Profile";
-import Register from "./Register";
-import Footer from "./Footer";
-import Miss from "./Miss";
+import "./App.css";
+import Header from "./Header.jsx";
+import Navbar from "./Navbar.jsx";
+import Home from "./Home.jsx";
+import Problems from "./Problems.jsx";
+import Submissions from "./Submissions.jsx";
+import Leaderboard from "./Leaderboard.jsx";
+import Login from "./Login.jsx";
+import Profile from "./Profile.jsx";
+import Register from "./Register.jsx";
+import Footer from "./Footer.jsx";
+import Miss from "./Miss.jsx";
 import useWindowSize from './hooks/useWindowSize';
 import useAxiosFetch from './hooks/useAxiosFetch';
 

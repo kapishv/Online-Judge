@@ -1,3 +1,5 @@
+import "./Footer.css";
+
 const Footer = () => {
   const today = new Date();
   return (

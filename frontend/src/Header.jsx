@@ -1,4 +1,5 @@
 import { FaCode, FaLaptop, FaTabletAlt, FaMobileAlt } from "react-icons/fa";
+import "./Header.css";
 
 const Header = ({ title, width }) => {
   return (
