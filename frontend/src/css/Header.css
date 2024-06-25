@@ -1,0 +1,16 @@
+.Header {
+  width: 100%;
+  background-color: darkcyan;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Header h1 {
+  font-size: 1.5rem;
+}
+
+.Header svg {
+  font-size: 2rem;
+}

@@ -1,0 +1,63 @@
+.Nav {
+  width: 100%;
+  background-color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Nav ul {
+  color: #fff;
+  list-style-type: none;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.Nav li {
+  padding: 0.4rem;
+}
+
+.Nav li:hover,
+.Nav li:focus {
+  padding: 0.4rem;
+}
+
+.Nav li a {
+  color: white;
+  text-decoration: none;
+}
+
+.Nav li:hover,
+.Nav li:focus,
+.Nav li:hover a,
+.Nav li:focus a {
+  background-color: lightcyan;
+  color: black;
+}
+
+.Nav li:hover a,
+.Nav li:focus a {
+  cursor: pointer;
+}
+
+.Nav .active {
+  border-bottom: 2px solid lightcyan;
+}
+
+@media only screen and (min-width: 610px) {
+  .Nav {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .Nav li:hover,
+  .Nav li:focus,
+  .Nav li:hover a,
+  .Nav li:focus a {
+    background-color: lightcyan;
+    color: black;
+  }
+}
