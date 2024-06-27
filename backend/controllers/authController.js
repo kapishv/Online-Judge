@@ -12,6 +12,7 @@ const handleLogin = async (req, res) => {
       .json({ message: "Username and password are required." });
 
   const foundUser = await User.findOne({ username: username }).exec();
+  console.log(foundUser);
   if (!foundUser) return res.sendStatus(401); //Unauthorized
   // evaluate password
   const match = await bcrypt.compare(password, foundUser.password);
@@ -26,7 +27,7 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: "10m" }
     );
     const newRefreshToken = jwt.sign(
       { username: foundUser.username },
@@ -78,7 +79,7 @@ const handleLogin = async (req, res) => {
     });
 
     // Send authorization roles and access token to user
-    res.json({ roles, accessToken });
+    res.json({ accessToken });
   } else {
     res.sendStatus(401);
   }

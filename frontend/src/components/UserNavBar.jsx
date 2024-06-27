@@ -1,8 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import useLogout from "../hooks/useLogout";
 import "../css/Navbar.css";
 
-const Navbar = () => {
+const UserNavbar = () => {
+    const { auth } = useAuth();
+    const logout = useLogout();
+
+    const logOut = async () => {
+        await logout();
+    }
   return (
     <nav className="Nav">
       <ul>
@@ -13,19 +21,22 @@ const Navbar = () => {
           <NavLink to="/problemset">Problems</NavLink>
         </li>
         <li>
+          <NavLink to="/submissions">Submissions</NavLink>
+        </li>
+        <li>
           <NavLink to="/leaderboard">Leaderboard</NavLink>
         </li>
       </ul>
       <ul>
         <li>
-          <NavLink to="/login">Login</NavLink>
+        <NavLink to={`/user/${auth?.user}`}>Profile</NavLink>
         </li>
         <li>
-          <NavLink to="/register">Register</NavLink>
+          <span onClick={logOut}>Logout</span>
         </li>
       </ul>
     </nav>
   );
 };
 
-export default Navbar;
+export default UserNavbar;

@@ -11,7 +11,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname;
 
   const userRef = useRef();
   const errRef = useRef();
@@ -40,14 +40,13 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log(JSON.stringify(response?.data));
-      //console.log(JSON.stringify(response));
       const accessToken = response?.data?.accessToken;
-      const roles = response?.data?.roles;
-      setAuth({ user, pwd, roles, accessToken });
+      setAuth({ user, accessToken });
       setUser("");
       setPwd("");
-      navigate(from, { replace: true });
+      navigate(typeof from === "undefined" ? `/user/${user}` : from, {
+        replace: true,
+      });
     } catch (err) {
       console.error(err);
       if (!err?.response) {

@@ -1,6 +1,7 @@
 const User = require("../model/User");
 
 const handleLogout = async (req, res) => {
+  console.log("We got you!");
   // On client, also delete the accessToken
 
   const cookies = req.cookies;

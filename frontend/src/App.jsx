@@ -11,11 +11,12 @@ import Login from "./components/Login";
 import Profile from "./components/Profile";
 import Register from "./components/Register";
 import Footer from "./components/Footer";
-import Unauthorized from './components/Unauthorized';
+import Unauthorized from "./components/Unauthorized";
 import Miss from "./components/Miss";
-import RequireAuth from "./components/RequireAuth";
+import RedirectToLogin from "./components/RedirectToLogin";
 import useWindowSize from "./hooks/useWindowSize";
-import useAxiosFetch from "./hooks/useAxiosFetch";
+import SecureRoute from "./components/SecureRoute";
+import UserNavbar from "./components/UserNavBar";
 
 const ROLES = {
   User: 2001,
@@ -28,14 +29,23 @@ const App = () => {
   return (
     <div className="App">
       <Header title="CodeCraft" width={width} />
-      <Navbar />
+      <SecureRoute
+        roleMap={new Map([[ROLES.User, UserNavbar]])}
+        DefaultComp={Navbar}
+      />
       <div className="container">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/problemset" element={<Problems />} />
-          <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
-            <Route path="/submissions" element={<Submissions />} />
-          </Route>
+          <Route
+            path="/submissions"
+            element={
+              <SecureRoute
+                roleMap={new Map([[ROLES.User, Submissions]])}
+                DefaultComp={RedirectToLogin}
+              />
+            }
+          />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/user/:username" element={<Profile />} />
