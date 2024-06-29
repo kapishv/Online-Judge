@@ -3,14 +3,21 @@ const router = express.Router();
 const problemsController = require("../../controllers/problemsController");
 const ROLES_LIST = require("../../config/roles_list");
 const verifyRoles = require("../../middleware/verifyRoles");
+const verifyJWT = require("../../middleware/verifyJWT");
+const upload = require('../../utils/upload');
 
 router
   .route("/")
-  .get(verifyRoles(ROLES_LIST.User), problemsController.getAllProblems);
+  .get(problemsController.getAllProblems)
+  .post(verifyJWT, verifyRoles(ROLES_LIST.Admin), problemsController.addProblem)
 
 router
-  .route("/:id")
-  .get(verifyRoles(ROLES_LIST.User), problemsController.getProblem)
-  .delete(verifyRoles(ROLES_LIST.Admin), problemsController.deleteProblem);
+  .route("/:title")
+  .get(problemsController.getProblem)
+  .put(verifyJWT, verifyRoles(ROLES_LIST.Admin), problemsController.updateProblem)
+  .delete(verifyJWT, verifyRoles(ROLES_LIST.Admin), problemsController.deleteProblem);
 
 module.exports = router;
+
+
+

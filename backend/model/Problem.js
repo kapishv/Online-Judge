@@ -19,7 +19,6 @@ const ProblemSchema = new Schema({
   },
   tags: {
     type: [String],
-    enum: ["binary search", "dp", "number theory" /* add more as needed */],
     required: true,
   },
   description: {
@@ -47,20 +46,13 @@ const ProblemSchema = new Schema({
     required: true,
   },
   hiddenTestcasesInput: {
-    type: [String],
-    required: true,
+    type: String,
   },
   hiddenTestcasesOutput: {
-    type: [String],
-    required: true,
+    type: String,
   },
   explanation: {
     type: String,
-    required: false, // Optional field
-  },
-  contributors: {
-    type: [String],
-    required: false, // Optional field
   },
 });
 
