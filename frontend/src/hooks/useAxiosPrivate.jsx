@@ -38,7 +38,43 @@ const useAxiosPrivate = () => {
     };
   }, [auth, refresh]);
 
-  return axiosPrivate;
+  const fetchWithHandling = (method, url, data = null, config = {}) => {
+    let isMounted = true;
+    const controller = new AbortController();
+    config.signal = controller.signal;
+
+    if ((method === 'get' || method === 'delete') && data) {
+      const queryParams = new URLSearchParams(data).toString();
+      if (queryParams) {
+        url = `${url}?${queryParams}`;
+      }
+    }
+
+    const makeRequest = async () => {
+      try {
+        const response = await axiosPrivate[method](url, data, config);
+        if (isMounted) {
+          return response.data;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const cleanup = () => {
+      isMounted = false;
+      controller.abort();
+    };
+
+    return { makeRequest, cleanup };
+  };
+
+  const get = (url, data, config = {}) => fetchWithHandling('get', url, data, config);
+  const post = (url, data, config = {}) => fetchWithHandling('post', url, data, config);
+  const put = (url, data, config = {}) => fetchWithHandling('put', url, data, config);
+  const del = (url, data, config = {}) => fetchWithHandling('delete', url, data, config);
+
+  return { get, post, put, del };
 };
 
 export default useAxiosPrivate;

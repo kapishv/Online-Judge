@@ -63,7 +63,7 @@ const Login = () => {
   };
 
   return (
-    <section>
+    <section className="login">
       <p
         ref={errRef}
         className={errMsg ? "errmsg" : "offscreen"}

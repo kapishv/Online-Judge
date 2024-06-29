@@ -1,4 +1,4 @@
-section {
+section.register {
   width: 100%;
   max-width: 420px;
   min-height: 400px;
@@ -11,7 +11,7 @@ section {
   margin: auto;
 }
 
-form {
+.register form {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -19,31 +19,31 @@ form {
   padding-bottom: 1rem;
 }
 
-a,
-a:visited {
+.register a,
+.register a:visited {
   color: #fff;
 }
 
-input[type="text"],
-input[type="password"],
-button,
-textarea {
+.register input[type="text"],
+.register input[type="password"],
+.register button,
+.register textarea {
   font-family: "Nunito", sans-serif;
   font-size: 12px;
   padding: 0.25rem;
   border-radius: 0.5rem;
 }
 
-label,
-button {
+.register label,
+.register button {
   margin-top: 1rem;
 }
 
-button {
+.register button {
   padding: 0.5rem;
 }
 
-.instructions {
+.register .instructions {
   font-size: 0.75rem;
   border-radius: 0.5rem;
   background: #000;
@@ -53,30 +53,30 @@ button {
   bottom: -10px;
 }
 
-.instructions > svg {
+.register .instructions > svg {
   margin-right: 0.25rem;
 }
 
-.offscreen {
+.register .offscreen {
   position: absolute;
   left: -9999px;
 }
 
-.hide {
+.register .hide {
   display: none;
 }
 
-.valid {
+.register .register .valid {
   color: limegreen;
   margin-left: 0.25rem;
 }
 
-.invalid {
+.register .invalid {
   color: red;
   margin-left: 0.25rem;
 }
 
-.errmsg {
+.register .errmsg {
   background-color: lightpink;
   color: firebrick;
   font-weight: bold;
@@ -84,24 +84,24 @@ button {
   margin-bottom: 0.5rem;
 }
 
-.line {
+.register .line {
   display: inline-block;
 }
 
 @media only screen and (min-width: 500px) {
-  input[type="text"],
-  input[type="password"],
-  button,
-  textarea {
+  .register input[type="text"],
+  .register input[type="password"],
+  .register button,
+  .register textarea {
     font-size: 16px;
   }
 }
 
 @media only screen and (min-width: 680px) {
-  input[type="text"],
-  input[type="password"],
-  button,
-  textarea {
+  .register input[type="text"],
+  .register input[type="password"],
+  .register button,
+  .register textarea {
     font-size: 22px;
   }
 }

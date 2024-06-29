@@ -1,0 +1,110 @@
+.problem-page {
+    font-family: "Arial", sans-serif;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    min-height:100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .detail {
+    display: inline-block;
+    font-size: 18px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    padding: 6px 10px;
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    color: #333;
+    font-weight: bold;
+}
+
+.tag {
+    display: inline-block;
+    background-color: darkcyan;
+    color: white;
+    padding: 2px 8px;
+    margin-left: 6px;
+    border-radius: 15px;
+    font-size: 16px;
+}
+  
+  .problem-page h1 {
+    color: black;
+    font-size: 35px;
+    margin-bottom: 10px;
+    border-bottom: 5px solid darkcyan;
+  }
+  
+  .problem-page h2 {
+    color: black;
+    margin-top: 15px;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .problem-page pre {
+    min-height:40px;
+    margin-top: -15px;
+    background-color: #e0e0e0;
+    padding: 5px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 16px;
+    position: relative;
+  }
+  
+  .problem-page p {
+    line-height: 1.5;
+    font-size: 16px;
+  }
+  
+  .sample-section {
+    margin-top: -20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .sample-box {
+    flex: 1;
+  }
+  
+  .copy-button {
+    background-color: darkcyan;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .copy-button:hover {
+    background-color: #0b6464;
+  }
+  
+  .copy-notification {
+    position: fixed;
+    top: 100px;
+    right: 10px;
+    background-color: darkcyan;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    font-size: 16px;
+  }
+  
+  .copy-notification.show {
+    opacity: 1;
+  }
+  

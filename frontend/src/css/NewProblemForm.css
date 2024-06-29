@@ -1,0 +1,62 @@
+.NewProblem {
+  background-color: #f8f8f8;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 100%;
+}
+
+.NewProblem h2 {
+  margin-top: 10px;
+  font-size: 30px;
+  color: black;
+  text-align: center;
+}
+
+.newProblemForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.newProblemForm label {
+  font-size: 20px;
+  color: black;
+}
+
+.newProblemForm input,
+.newProblemForm select,
+.newProblemForm textarea {
+  font-family: "Nunito", sans-serif;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.newProblemForm label,
+button {
+  margin-top: 10px;
+}
+
+.newProblemForm textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.newProblemForm button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: darkcyan;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.newProblemForm button:hover {
+  background-color: #0b6464;
+}

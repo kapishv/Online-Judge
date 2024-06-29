@@ -1,0 +1,80 @@
+.EditProblem {
+    background-color: #f8f8f8;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-height: 100%;
+  }
+  
+  .EditProblem h2 {
+    margin-top: 10px;
+    font-size: 30px;
+    color: black;
+    text-align: center;
+  }
+  
+  .editProblemForm {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .editProblemForm label {
+    font-size: 20px;
+    color: black;
+  }
+  
+  .editProblemForm input,
+  .editProblemForm select,
+  .editProblemForm textarea {
+    font-family: "Nunito", sans-serif;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .editProblemForm label,
+  button {
+    margin-top: 10px;
+  }
+  
+  .editProblemForm textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .editProblemForm div {
+    display:flex;
+    gap: 10px;
+  }
+  
+  .editProblemForm button {
+    flex:1;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .update-button {
+    background-color: orange;
+  }
+
+  .delete-button {
+    background-color: red;
+  }
+
+  .update-button:hover {
+    background-color: darkorange;
+  }
+
+  .delete-button:hover {
+    background-color: darkred;
+  }
+  

@@ -17,6 +17,10 @@ import RedirectToLogin from "./components/RedirectToLogin";
 import useWindowSize from "./hooks/useWindowSize";
 import SecureRoute from "./components/SecureRoute";
 import UserNavbar from "./components/UserNavBar";
+import AdminNavbar from "./components/AdminNavbar";
+import NewProblem from "./components/NewProblem";
+import EditProblem from "./components/EditProblem";
+import Codespace from "./components/Codespace";
 
 const ROLES = {
   User: 2001,
@@ -30,13 +34,41 @@ const App = () => {
     <div className="App">
       <Header title="CodeCraft" width={width} />
       <SecureRoute
-        roleMap={new Map([[ROLES.User, UserNavbar]])}
+        roleMap={
+          new Map([
+            [ROLES.User, UserNavbar],
+            [ROLES.Admin, AdminNavbar],
+          ])
+        }
         DefaultComp={Navbar}
       />
-      <div className="container">
+      <div className="main-container">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/problemset" element={<Problems />} />
+          <Route
+            path="/problem"
+            element={
+              <SecureRoute
+                roleMap={new Map([[ROLES.Admin, NewProblem]])}
+                DefaultComp={Miss}
+              />
+            }
+          />
+          <Route
+            path="/problemset/:title"
+            element={
+              <SecureRoute
+                roleMap={
+                  new Map([
+                    [ROLES.User, Codespace],
+                    [ROLES.Admin, EditProblem],
+                  ])
+                }
+                DefaultComp={Codespace}
+              />
+            }
+          />
           <Route
             path="/submissions"
             element={

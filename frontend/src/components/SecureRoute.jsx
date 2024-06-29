@@ -29,7 +29,6 @@ const SecureRoute = ({ roleMap, DefaultComp }) => {
   if (isLoading) {
     return <p>Loading...</p>;
   }
-
   const decoded = auth?.accessToken ? jwtDecode(auth.accessToken) : undefined;
   const roles = decoded?.UserInfo?.roles || [];
   const userRole = roles.find((role) => roleMap.has(role));

@@ -10,7 +10,7 @@
   box-shadow: 0px 0px 15px gray;
 }
 
-.container {
+.main-container {
   width: 100%;
   flex-grow: 1;
   padding: 1rem;

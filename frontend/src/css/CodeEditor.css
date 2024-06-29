@@ -1,0 +1,177 @@
+.menu-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background-color: darkcyan;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-height: 50px;
+}
+
+.menu-bar .language-select {
+  display: flex;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  color: black;
+}
+
+.menu-bar .buttons {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.theme-button,
+.refresh-button {
+  padding: 7px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.theme-button {
+  background-color: #ffb74d;
+  color: #fff;
+}
+
+.refresh-button {
+  background-color: #ff7043;
+  color: #fff;
+}
+
+.theme-button:hover {
+  background-color: #ff9800;
+}
+
+.refresh-button:hover {
+  background-color: #f4511e;
+}
+
+/* ---------------------------------------------- */
+
+.editor-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 540px;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.code-editor {
+  flex: 1;
+  min-height: 540px;
+}
+
+/* ----------------------------------------------------- */
+
+.main-buttons {
+  display: flex;
+  justify-content: space-around; /* Adjust as needed */
+  gap: 10px; /* Adjust the gap between buttons */
+  background-color: darkcyan;
+  padding: 5px 10px;
+  align-items: flex-start;
+  max-height: 50px;
+}
+
+.console-button,
+.run-button,
+.submit-button {
+  position: relative;
+  bottom: 10px;
+  flex: 1;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.console-button {
+  background-color: #3498db; /* Blue */
+  color: white;
+}
+
+.console-button:hover {
+  background-color: #2980b9; /* Darker Blue */
+}
+
+.run-button {
+  background-color: #2ecc71; /* Green */
+  color: white;
+}
+
+.run-button:hover {
+  background-color: #27ae60; /* Darker Green */
+}
+
+.submit-button {
+  background-color: #e74c3c; /* Red */
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #c0392b; /* Darker Red */
+}
+
+/* ----------------------------------------------------- */
+
+.console {
+  width: 100%;
+  /* overflow: auto; */
+  height: 0;
+  transition: height 0.3s ease-in-out;
+}
+
+.console.show {
+  height: 200px;
+}
+
+.tabs {
+  position: relative;
+  bottom: 10px;
+  display: flex;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid grey;
+  background-color: #ddd;
+}
+
+.tabs button.active {
+  font-weight: bold;
+  background-color: white;
+}
+
+.tab-content {
+  display: flex;
+  width: 100%;
+}
+
+.tab-content > div {
+  flex: 1;
+  display: flex;
+}
+
+.tab-content textarea {
+  font-size: 16px;
+  overflow: auto;
+  width: 100%;
+  height: 130px;
+  resize: none;
+}

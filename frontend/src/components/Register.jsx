@@ -100,7 +100,7 @@ const Register = () => {
   return (
     <>
       {success ? (
-        <section>
+        <section className="register">
           <h1>Success!</h1>
           <br />
           <p>
@@ -110,7 +110,7 @@ const Register = () => {
           </p>
         </section>
       ) : (
-        <section>
+        <section className="register">
           <p
             ref={errRef}
             className={errMsg ? "errmsg" : "offscreen"}
