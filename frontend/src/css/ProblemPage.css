@@ -48,7 +48,7 @@
   
   .problem-page pre {
     min-height:40px;
-    margin-top: -15px;
+    margin-top: -10px;
     background-color: #e0e0e0;
     padding: 5px;
     border-radius: 6px;
@@ -58,7 +58,7 @@
   }
   
   .problem-page p {
-    line-height: 1.5;
+    line-height: 1.2;
     font-size: 16px;
   }
   
@@ -81,7 +81,7 @@
     cursor: pointer;
     font-size: 12px;
     margin-left: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     transition: background-color 0.3s ease;
   }
   

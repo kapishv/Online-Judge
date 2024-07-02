@@ -8,7 +8,7 @@ const Problems = () => {
   const { get } = useAxiosPrivate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProblems, setFilteredProblems] = useState(problems);
-  const [sortBy, setSortBy] = useState("title");
+  const [sortBy, setSortBy] = useState("codingScore");
 
   useEffect(() => {
     const { makeRequest, cleanup } = get("/problemset");

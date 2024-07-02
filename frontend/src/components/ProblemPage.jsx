@@ -1,7 +1,7 @@
 import "../css/ProblemPage.css";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
-function ProblemPage({p}) {
+function ProblemPage({ p }) {
   const sampleInputRef = useRef(null);
   const sampleOutputRef = useRef(null);
   const [notification, setNotification] = useState("");
@@ -32,13 +32,41 @@ function ProblemPage({p}) {
         </div>
       </div>
       <h2>Description</h2>
-      <p>{p?.description}</p>
+      <p>
+        {p?.description.split("\n").map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))}
+      </p>
       <h2>Input Format</h2>
-      <p>{p?.inputFormat}</p>
+      <p>
+        {p?.inputFormat.split("\n").map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))}
+      </p>
       <h2>Output Format</h2>
-      <p>{p?.outputFormat}</p>
+      <p>
+        {p?.outputFormat.split("\n").map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))}
+      </p>
       <h2>Constraints</h2>
-      <p>{p?.constraints}</p>
+      <p>
+        {p?.constraints.split("\n").map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))}
+      </p>
       <div className="sample-section">
         <div className="sample-box">
           <h2>
@@ -53,7 +81,7 @@ function ProblemPage({p}) {
           </h2>
           <pre ref={sampleInputRef}>{p?.sampleInput}</pre>
         </div>
-        <div className="sample-box" style={{marginLeft:"20px"}}>
+        <div className="sample-box" style={{ marginLeft: "20px" }}>
           <h2>
             Sample Output
             <button
@@ -67,9 +95,19 @@ function ProblemPage({p}) {
           <pre ref={sampleOutputRef}>{p?.sampleOutput}</pre>
         </div>
       </div>
-      {p?.explanation &&
-      (<><h2>Explanation</h2>
-      <p>{p?.explanation}</p></>)}
+      {p?.explanation && (
+        <>
+          <h2>Explanation</h2>
+          <p>
+            {p?.explanation.split("\n").map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))}
+          </p>
+        </>
+      )}
     </div>
   );
 }

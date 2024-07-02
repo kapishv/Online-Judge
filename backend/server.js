@@ -40,8 +40,7 @@ app.use("/logout", require("./routes/logout"));
 app.use("/refresh", require("./routes/refresh"));
 
 app.use("/problemset", require("./routes/api/problems"))
-
-// routes after jwt verification 
+app.use("/run", require("./routes/api/run"));
 
 app.all("*", (req, res) => {
   res.status(404).json({ error: "404 Not Found" });

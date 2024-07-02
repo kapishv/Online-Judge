@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import "../css/Problem.css";
 
 const Problem = ({ p }) => {
     return (

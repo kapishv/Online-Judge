@@ -9,7 +9,7 @@ const upload = require('../../utils/upload');
 router
   .route("/")
   .get(problemsController.getAllProblems)
-  .post(verifyJWT, verifyRoles(ROLES_LIST.Admin), problemsController.addProblem)
+  .post(verifyJWT, verifyRoles(ROLES_LIST.Admin), problemsController.addProblem);
 
 router
   .route("/:title")

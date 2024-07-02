@@ -5,7 +5,7 @@ import ProblemPage from "./ProblemPage";
 import CodeEditor from "./CodeEditor";
 import Miss from "./Miss";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import "../css/ResizeHandler.css"
+import "../css/ResizeHandler.css";
 
 function Codespace() {
   const [problem, setProblem] = useState(null);
@@ -52,7 +52,7 @@ function Codespace() {
           maxSize={70}
           style={{ overflow: "auto", height: `100%` }}
         >
-          <CodeEditor />
+          <CodeEditor/>
         </Panel>
       </PanelGroup>
     );

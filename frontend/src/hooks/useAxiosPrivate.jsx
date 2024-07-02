@@ -1,11 +1,14 @@
 import { axiosPrivate } from "../api/axios";
 import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
   const { auth } = useAuth();
+  const navigate = useNavigate();
+    const location = useLocation();
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -58,6 +61,7 @@ const useAxiosPrivate = () => {
         }
       } catch (err) {
         console.error(err);
+        navigate('/login', { state: { from: location }, replace: true });
       }
     };
 

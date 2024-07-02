@@ -56,6 +56,9 @@ const addProblem = async (req, res) => {
       .json({ message: "All required fields must be provided" });
   }
 
+  const duplicate = await Problem.findOne({ title: title }).exec();
+  if (duplicate) return res.sendStatus(409); //Conflict
+
   const newProblem = new Problem({
     title,
     difficulty,
@@ -121,6 +124,6 @@ module.exports = {
   getAllProblems,
   getProblem,
   addProblem,
-  deleteProblem,
   updateProblem,
+  deleteProblem,
 };

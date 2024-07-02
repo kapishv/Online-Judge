@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
@@ -13,6 +14,12 @@ const CodeEditor = () => {
   const [theme, setTheme] = useState("github");
   const [showConsole, setShowConsole] = useState(false);
   const [activeTab, setActiveTab] = useState("input");
+  const [inputText, setInputText] = useState("");
+  const [outputText, setOutputText] = useState("");
+  const [verdictText, setVerdictText] = useState("");
+  const outputRef = useRef(null);
+
+  const { post } = useAxiosPrivate();
 
   const switchTheme = () => {
     setTheme((prevTheme) => (prevTheme === "github" ? "monokai" : "github"));
@@ -20,9 +27,26 @@ const CodeEditor = () => {
 
   const refreshCode = () => setCode("");
 
-  const handleRun = () => {
-    // Add your logic for running the code here
-    console.log("Running code");
+  const handleRun = async () => {
+    const { makeRequest } = post("/run", {
+      input: inputText,
+      code: code,
+      lang: language,
+    });
+    const data = await makeRequest();
+    if (data) {
+      console.log("Run Response:", data);
+      setShowConsole(true);
+      setActiveTab("output");
+      if (outputRef.current) {
+        outputRef.current.focus();
+      }
+      if (data.success) {
+        setOutputText(data.output);
+      } else {
+        setOutputText(data.error);
+      }
+    }
   };
 
   const handleSubmit = () => {
@@ -40,7 +64,7 @@ const CodeEditor = () => {
         >
           <option value="javascript">JavaScript</option>
           <option value="python">Python</option>
-          <option value="c_cpp">C/C++</option>
+          <option value="c_cpp">C++</option>
           {/* Add more languages as needed */}
         </select>
         <div className="buttons">
@@ -99,17 +123,23 @@ const CodeEditor = () => {
             <div className="tab-content">
               {activeTab === "input" && (
                 <div>
-                  <textarea id="input"></textarea>
+                  <textarea
+                    id="input"
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                  ></textarea>
                 </div>
               )}
               {activeTab === "output" && (
                 <div>
-                  <textarea id="output"></textarea>
+                  <div className="output-div" ref={outputRef} tabIndex="0">
+                    {outputText}
+                  </div>
                 </div>
               )}
               {activeTab === "verdict" && (
                 <div>
-                  <textarea id="verdict"></textarea>
+                  <div className="verdict-div">{verdictText}</div>
                 </div>
               )}
             </div>
