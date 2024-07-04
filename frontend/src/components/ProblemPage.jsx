@@ -67,34 +67,28 @@ function ProblemPage({ p }) {
           </React.Fragment>
         ))}
       </p>
-      <div className="sample-section">
-        <div className="sample-box">
-          <h2>
-            Sample Input
-            <button
-              type="button"
-              className="copy-button"
-              onClick={() => copyToClipboard(sampleInputRef, "Sample Input")}
-            >
-              Copy
-            </button>
-          </h2>
-          <pre ref={sampleInputRef}>{p?.sampleInput}</pre>
-        </div>
-        <div className="sample-box" style={{ marginLeft: "20px" }}>
-          <h2>
-            Sample Output
-            <button
-              type="button"
-              className="copy-button"
-              onClick={() => copyToClipboard(sampleOutputRef, "Sample Output")}
-            >
-              Copy
-            </button>
-          </h2>
-          <pre ref={sampleOutputRef}>{p?.sampleOutput}</pre>
-        </div>
-      </div>
+      <h2>
+        Sample Input
+        <button
+          type="button"
+          className="copy-button"
+          onClick={() => copyToClipboard(sampleInputRef, "Sample Input")}
+        >
+          Copy
+        </button>
+      </h2>
+      <pre ref={sampleInputRef}>{p?.sampleInput}</pre>
+      <h2>
+        Sample Output
+        <button
+          type="button"
+          className="copy-button"
+          onClick={() => copyToClipboard(sampleOutputRef, "Sample Output")}
+        >
+          Copy
+        </button>
+      </h2>
+      <pre ref={sampleOutputRef}>{p?.sampleOutput}</pre>
       {p?.explanation && (
         <>
           <h2>Explanation</h2>

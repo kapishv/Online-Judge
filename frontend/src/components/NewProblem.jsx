@@ -14,10 +14,10 @@ function NewProblem() {
     inputFormat: "Input Format of the problem",
     outputFormat: "Output Format of the problem",
     constraints: "Constraints of the problem",
-    sampleInput: "Sample Input",
-    sampleOutput: "Sample Output",
-    // hiddenTestcasesInput: "",
-    // hiddenTestcasesOutput: "",
+    solution: "Solution of the problem",
+    sampleInput: "Sample Input of the problem",
+    sampleOutput: "Sample Output of the problem",
+    hiddenTestcases: [{input:"Hidden Input" ,output:"Hidden Output"}],
     explanation: "Explanation of the problem"
   });
 

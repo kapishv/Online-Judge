@@ -48,28 +48,16 @@
   
   .problem-page pre {
     min-height:40px;
-    margin-top: -10px;
     background-color: #e0e0e0;
     padding: 5px;
     border-radius: 6px;
     overflow-x: auto;
     font-size: 16px;
-    position: relative;
   }
   
   .problem-page p {
     line-height: 1.2;
     font-size: 16px;
-  }
-  
-  .sample-section {
-    margin-top: -20px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .sample-box {
-    flex: 1;
   }
   
   .copy-button {
@@ -80,8 +68,6 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 12px;
-    margin-left: 10px;
-    margin-bottom: 15px;
     transition: background-color 0.3s ease;
   }
   
@@ -91,9 +77,8 @@
   
   .copy-notification {
     position: fixed;
-    top: 100px;
-    right: 10px;
-    background-color: darkcyan;
+    top: 13%;
+    background-color: purple;
     color: white;
     padding: 5px 10px;
     border-radius: 5px;

@@ -45,11 +45,12 @@ const ProblemSchema = new Schema({
     type: String,
     required: true,
   },
-  hiddenTestcasesInput: {
-    type: String,
-  },
-  hiddenTestcasesOutput: {
-    type: String,
+  hiddenTestcases: {
+    type: [{
+      input: String,
+      output: String,
+    }],
+    default: [],
   },
   explanation: {
     type: String,

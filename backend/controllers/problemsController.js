@@ -23,6 +23,19 @@ const getProblem = async (req, res) => {
   res.json(problem);
 };
 
+const getFullProblem = async (req, res) => {
+  console.log(req.params);
+  if (!req?.params?.title)
+    return res.status(400).json({ message: "Problem title required" });
+  const problem = await Problem.findOne({ title: req.params.title }).exec();
+  if (!problem) {
+    return res
+      .status(204)
+      .json({ message: `Problem title ${req.params.id} not found` });
+  }
+  res.json(problem);
+};
+
 const addProblem = async (req, res) => {
   console.log(req.body);
   const {
@@ -36,6 +49,7 @@ const addProblem = async (req, res) => {
     constraints,
     sampleInput,
     sampleOutput,
+    hiddenTestcases,
     explanation,
   } = req.body;
 
@@ -49,7 +63,8 @@ const addProblem = async (req, res) => {
     !outputFormat ||
     !constraints ||
     !sampleInput ||
-    !sampleOutput
+    !sampleOutput ||
+    !hiddenTestcases
   ) {
     return res
       .status(400)
@@ -70,6 +85,7 @@ const addProblem = async (req, res) => {
     constraints,
     sampleInput,
     sampleOutput,
+    hiddenTestcases,
     explanation,
   });
 
@@ -123,6 +139,7 @@ const deleteProblem = async (req, res) => {
 module.exports = {
   getAllProblems,
   getProblem,
+  getFullProblem,
   addProblem,
   updateProblem,
   deleteProblem,

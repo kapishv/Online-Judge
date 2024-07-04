@@ -26,13 +26,14 @@
 
 .newProblemForm input,
 .newProblemForm select,
-.newProblemForm textarea {
+.newProblemForm textarea,
+.newProblemForm div > textarea {
   font-family: "Nunito", sans-serif;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-  width: 100%;
+  width:100%;
   box-sizing: border-box;
 }
 
@@ -41,9 +42,12 @@ button {
   margin-top: 10px;
 }
 
-.newProblemForm textarea {
+.newProblemForm textarea,
+.newProblemForm div > textarea {
   resize: vertical;
   min-height: 100px;
+  overflow: auto;
+  white-space: pre;
 }
 
 .newProblemForm button {
@@ -59,4 +63,35 @@ button {
 
 .newProblemForm button:hover {
   background-color: #0b6464;
+}
+
+.newProblemForm div {
+  display: flex;
+  flex-direction: column;
+}
+
+.newProblemForm div > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.newProblemForm p {
+  font-size: 16px;
+  padding: 5px 5px;
+  color: black;
+}
+
+button.deleteTestcase {
+  padding: 0 5px;
+  background: none;
+  color: black;
+  border: none;
+  cursor: pointer;
+}
+
+button.deleteTestcase:hover {
+  background: none;
+  color: red;
 }

@@ -1,6 +1,21 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const solvedSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  difficulty: {
+    type: String,
+    required: true,
+  },
+  codingScore: {
+    type: Number,
+    required: true,
+  },
+});
+
 const userSchema = new Schema({
   username: {
     type: String,
@@ -21,6 +36,16 @@ const userSchema = new Schema({
     required: true,
   },
   refreshToken: [String],
+  codingScore: {
+    type: Number,
+    default: 0,
+  },
+  solved: {
+    type: [solvedSchema],
+    default: [],
+  },
 });
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;

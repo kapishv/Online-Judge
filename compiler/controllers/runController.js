@@ -4,7 +4,6 @@ const { handleJSRun } = require("./handleJSRun.js");
 
 const handleRun = async (req, res) => {
   const { lang = "c_cpp", code, input } = req.body;
-  console.log(req.body);
   try {
     if (lang === "c_cpp") {
       const result = await handleCppRun(code, input);

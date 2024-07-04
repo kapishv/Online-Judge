@@ -41,6 +41,7 @@ app.use("/refresh", require("./routes/refresh"));
 
 app.use("/problemset", require("./routes/api/problems"))
 app.use("/run", require("./routes/api/run"));
+app.use("/submit", require("./routes/api/submit"));
 
 app.all("*", (req, res) => {
   res.status(404).json({ error: "404 Not Found" });

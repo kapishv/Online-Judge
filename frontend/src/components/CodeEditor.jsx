@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
@@ -17,9 +17,24 @@ const CodeEditor = () => {
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
   const [verdictText, setVerdictText] = useState("");
+  const [loadingRun, setLoadingRun] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
   const outputRef = useRef(null);
+  const verdictRef = useRef(null);
 
   const { post } = useAxiosPrivate();
+
+  useEffect(() => {
+    if (outputRef.current) {
+      outputRef.current.focus();
+    }
+  }, [outputText]);
+
+  useEffect(() => {
+    if (verdictRef.current) {
+      verdictRef.current.focus();
+    }
+  }, [verdictText]);
 
   const switchTheme = () => {
     setTheme((prevTheme) => (prevTheme === "github" ? "monokai" : "github"));
@@ -28,30 +43,102 @@ const CodeEditor = () => {
   const refreshCode = () => setCode("");
 
   const handleRun = async () => {
+    setShowConsole(true);
+    setActiveTab("output");
+    setOutputText("");
+    setVerdictText("");
+    setLoadingRun(true);
     const { makeRequest } = post("/run", {
       input: inputText,
       code: code,
       lang: language,
     });
     const data = await makeRequest();
+    setLoadingRun(false);
     if (data) {
       console.log("Run Response:", data);
-      setShowConsole(true);
-      setActiveTab("output");
-      if (outputRef.current) {
-        outputRef.current.focus();
-      }
       if (data.success) {
-        setOutputText(data.output);
+        setOutputText(
+          <>
+            <span className="info-text">Result:</span>
+            <span className="result-success">Successful</span>
+            <br />
+            <span className="info-text">Output:</span>
+            <br />
+            <pre className="output-text">{data.output}</pre>
+          </>
+        );
       } else {
-        setOutputText(data.error);
+        setOutputText(
+          <>
+            <span className="info-text">Result:</span>
+            <span className="result-error">{data.error}</span>
+            <br />
+            <span className="info-text">Output:</span>
+            <br />
+            <pre className="output-text">{data.error.message}</pre>
+          </>
+        );
       }
     }
   };
 
-  const handleSubmit = () => {
-    // Add your logic for submitting the code here
-    console.log("Submitting code");
+  const handleSubmit = async () => {
+    setShowConsole(true);
+    setActiveTab("verdict");
+    setOutputText("");
+    setVerdictText("");
+    setLoadingSubmit(true);
+    const { makeRequest } = post(
+      `/submit/${location.pathname.split("/").pop()}`,
+      {
+        code: code,
+        lang: language,
+      }
+    );
+    const data = await makeRequest();
+    setLoadingSubmit(false);
+    if (data) {
+      console.log("Submit Response:", data);
+      if (data.success) {
+        setVerdictText(
+          <>
+            <span className="info-text">Result:</span>
+            <span className="result-success">Accepted</span>
+            <br />
+            <span className="info-text">Testcases:</span>
+            <br />
+            <span className="test-cases">
+              {Array.from({ length: data.pass }, (_, i) => (
+                <span key={i} className="test-case-success">
+                  Test case {i + 1}
+                </span>
+              ))}
+            </span>
+          </>
+        );
+      } else {
+        setVerdictText(
+          <>
+            <span className="info-text">Result:</span>
+            <span className="result-error">{data.error}</span>
+            <br />
+            <span className="info-text">Testcases:</span>
+            <br />
+            <span className="test-cases">
+              {Array.from({ length: data.pass }, (_, i) => (
+                <span key={i} className="test-case-success">
+                  Test case {i + 1}
+                </span>
+              ))}
+              <span className="test-case-failure">
+                Test case {data.pass + 1}
+              </span>
+            </span>
+          </>
+        );
+      }
+    }
   };
 
   return (
@@ -132,14 +219,24 @@ const CodeEditor = () => {
               )}
               {activeTab === "output" && (
                 <div>
-                  <div className="output-div" ref={outputRef} tabIndex="0">
-                    {outputText}
-                  </div>
+                  {loadingRun ? (
+                    <div className="loading-animation">Loading...</div>
+                  ) : (
+                    <div className="output-div" ref={outputRef} tabIndex="0">
+                      {outputText}
+                    </div>
+                  )}
                 </div>
               )}
               {activeTab === "verdict" && (
                 <div>
-                  <div className="verdict-div">{verdictText}</div>
+                  {loadingSubmit ? (
+                    <div className="loading-animation">Loading...</div>
+                  ) : (
+                    <div className="verdict-div" ref={verdictRef} tabIndex="0">
+                      {verdictText}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

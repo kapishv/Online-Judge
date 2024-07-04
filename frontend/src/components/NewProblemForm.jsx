@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { FaTimes } from "react-icons/fa";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import "../css/NewProblemForm.css";
 
@@ -9,6 +10,35 @@ const NewProblemForm = ({ p, sp }) => {
   const navigate = useNavigate();
   const { post } = useAxiosPrivate();
 
+  // Function to handle adding a new hidden testcase
+  const addHiddenTestcase = () => {
+    sp((prev) => ({
+      ...prev,
+      hiddenTestcases: [
+        ...prev.hiddenTestcases,
+        { input: "", output: "" }, // Initial empty values
+      ],
+    }));
+  };
+
+  // Function to handle deleting a hidden testcase by index
+  const deleteHiddenTestcase = (index) => {
+    sp((prev) => ({
+      ...prev,
+      hiddenTestcases: prev.hiddenTestcases.filter((_, i) => i !== index),
+    }));
+  };
+
+  // Function to handle updating input or output of a hidden testcase by index
+  const updateHiddenTestcase = (index, field, value) => {
+    sp((prev) => ({
+      ...prev,
+      hiddenTestcases: prev.hiddenTestcases.map((testcase, i) =>
+        i === index ? { ...testcase, [field]: value } : testcase
+      ),
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { makeRequest } = post("/problemset", p);
@@ -16,7 +46,7 @@ const NewProblemForm = ({ p, sp }) => {
     if (data) {
       console.log("Created Problem:", data);
     }
-    navigate('/problemset');
+    navigate("/problemset");
   };
 
   return (
@@ -114,22 +144,42 @@ const NewProblemForm = ({ p, sp }) => {
             sp((prev) => ({ ...prev, sampleOutput: e.target.value }))
           }
         />
-        {/* <label htmlFor="hiddenTestcasesInput">
-          Hidden Testcases Input (Upload File):
-        </label>
-        <input
-          id="hiddenTestcasesInput"
-          type="file"
-          onChange={(e) => sp((prev) => ({ ...prev, hiddenTestcasesInput: e.target.values[0] }))}
-        />
-        <label htmlFor="hiddenTestcasesOutput">
-          Hidden Testcases Output (Upload File):
-        </label>
-        <input
-          id="hiddenTestcasesOutput"
-          type="file"
-          onChange={(e) => sp((prev) => ({ ...prev, hiddenTestcasesOutput: e.target.values[0] }))}
-        /> */}
+        <label>Hidden Testcases:</label>
+        {p.hiddenTestcases.map((testcase, index) => (
+          <div key={index}>
+            <div>
+              <p>Hidden Testcase {index + 1}:</p>
+              {p.hiddenTestcases.length > 1 && (
+                <button
+                  type="button"
+                  className="deleteTestcase"
+                  onClick={() => deleteHiddenTestcase(index)}
+                >
+                  <FaTimes />
+                </button>
+              )}
+            </div>
+            <textarea
+              required
+              value={testcase.input}
+              placeholder="Input"
+              onChange={(e) =>
+                updateHiddenTestcase(index, "input", e.target.value)
+              }
+            />
+            <textarea
+              required
+              value={testcase.output}
+              placeholder="Output"
+              onChange={(e) =>
+                updateHiddenTestcase(index, "output", e.target.value)
+              }
+            />
+          </div>
+        ))}
+        <button type="button" onClick={addHiddenTestcase}>
+          Add Hidden Testcase
+        </button>
         <label htmlFor="explanation">Explanation (Optional):</label>
         <textarea
           id="explanation"
