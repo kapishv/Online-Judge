@@ -1,0 +1,46 @@
+.submissions-list-container {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.submissions-list-container .options {
+  display: flex;
+}
+
+.submissions-list-container .options input[type="text"],
+.submissions-list-container .options select {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.submissions-list-container .submissions-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  background-color: darkcyan;
+  color: black;
+  margin-bottom: 10px;
+  font-size: 25px;
+}
+
+.submissions-list-container .header-item {
+  font-weight: bold;
+  flex: 1;
+  text-align: left;
+}
+
+.submissions-list-container .header-item:last-child {
+  text-align: right;
+}
+
+.submissions-list-container .submissions-list {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  gap: 10px;
+}

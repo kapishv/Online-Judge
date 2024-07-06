@@ -3,7 +3,7 @@ const Problem = require("../model/Problem");
 const User = require("../model/User");
 const Submission = require("../model/Submission");
 
-const handleFail = async (username, title, pass, error, code) => {
+const handleFail = async (username, title, pass, error, lang, code) => {
   await Submission.create({
     username,
     title,
@@ -12,6 +12,7 @@ const handleFail = async (username, title, pass, error, code) => {
       pass,
       error,
     },
+    lang,
     code,
   });
   return { success: false, pass, error };
@@ -21,7 +22,7 @@ const sanitizeString = (str) => {
   return str.replace(/\s+/g, " ").trim();
 };
 
-const handleSubmit = async (req, res, next) => {
+const handleSubmit = async (req, res) => {
   try {
     if (!req?.params?.title)
       return res.status(400).json({ message: "Problem title required" });
@@ -49,6 +50,7 @@ const handleSubmit = async (req, res, next) => {
         title,
         pass,
         response.data.error,
+        lang,
         code
       );
       return res.status(200).json(failResult);
@@ -63,6 +65,7 @@ const handleSubmit = async (req, res, next) => {
         title,
         pass,
         "Wrong Answer",
+        lang,
         code
       );
       return res.status(200).json(failResult);
@@ -81,6 +84,7 @@ const handleSubmit = async (req, res, next) => {
           title,
           pass,
           response.data.error,
+          lang,
           code
         );
         return res.status(200).json(failResult);
@@ -95,6 +99,7 @@ const handleSubmit = async (req, res, next) => {
           title,
           pass,
           "Wrong Answer",
+          lang,
           code
         );
         return res.status(200).json(failResult);
@@ -115,7 +120,6 @@ const handleSubmit = async (req, res, next) => {
         difficulty: problem.difficulty,
         codingScore: problem.codingScore,
       });
-      user.codingScore += problem.codingScore;
       await user.save();
     }
 
@@ -127,6 +131,7 @@ const handleSubmit = async (req, res, next) => {
         pass,
         error: "None",
       },
+      lang,
       code,
     });
 

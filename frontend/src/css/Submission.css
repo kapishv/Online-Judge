@@ -1,0 +1,119 @@
+/* Base styles */
+.submission-item {
+  border-radius: 8px;
+  /* overflow: hidden; */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.submission-item .submission-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+/* Different hues for success and errors */
+.submission-item.success .submission-content {
+  background-color: #d4edda; /* Green for success */
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.1);
+}
+
+.submission-item.error .submission-content {
+  background-color: #f8d7da; /* Red for general errors */
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.1);
+}
+
+/* Different hues for specific errors */
+.submission-item.error-timeout .submission-content {
+  background-color: #ffe5b4; /* Orange for timeout errors */
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.1);
+}
+
+.submission-item.error-compile .submission-content {
+  background-color: #ffffcd; /* Yellow for compile errors */
+  box-shadow: 0 4px 8px rgba(23, 162, 184, 0.1);
+}
+
+/* Other existing styles */
+.submission-item .submission-attribute {
+  flex: 1;
+  text-align: left;
+}
+
+.submission-item .submission-attribute:last-child {
+  text-align: right;
+}
+
+.submission-item .view-code-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submission-item .view-code-button:hover {
+  background-color: #0056b3;
+}
+
+.submission-item .code-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.submission-item .code-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  max-width: 90%;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+.submission-item .code-container pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 20px 0;
+}
+
+.submission-item .copy-button,
+.submission-item .close-button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+}
+
+.submission-item .copy-button {
+  right: 10px;
+}
+
+.submission-item .close-button {
+  right: 100px;
+}
+
+.submission-item .copy-button:hover {
+  background-color: #218838;
+}
+
+.submission-item .close-button:hover {
+  background-color: #218838;
+}

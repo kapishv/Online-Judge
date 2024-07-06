@@ -72,14 +72,21 @@
   min-height: 540px;
 }
 
-/* Main Buttons Styles */
+/* Main Buttons and Console Container Styles */
+.console-and-buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
 .main-buttons {
   display: flex;
   justify-content: space-around;
   gap: 10px;
-  padding: 5px 10px;
+  padding: 0 10px;
   align-items: center;
-  max-height: 50px;
+  width: 100%;
 }
 
 .console-button,
@@ -126,12 +133,13 @@
 /* Console Styles */
 .console {
   width: 100%;
-  height: 0;
-  transition: height 0.3s ease-in-out;
+  height: auto;
+  transition: max-height 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 .console.show {
-  height: 200px;
+  max-height: 100vh;
 }
 
 .tabs {
@@ -163,24 +171,32 @@
 .tab-content {
   display: flex;
   flex-direction: column;
-  height: 75%;
   width: 100%;
+  height: 100%;
+  min-height: 200px;
 }
 
-.tab-content > div {
+.tab-content div {
+  width: 100%;
   height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
 }
 
 .tab-content textarea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   font-family: "Nunito", sans-serif;
   font-size: 16px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 100%;
-  height: 100%;
   resize: none;
   overflow: auto;
   box-sizing: border-box;
@@ -196,17 +212,9 @@
   border-color: #ccc;
 }
 
-.tab-content div {
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: white;
-}
-
-.output-div,
-.verdict-div {
+div.output-div,
+div.verdict-div {
+  display: block;
   font-family: "Nunito", sans-serif;
   font-size: 16px;
   padding: 10px;
@@ -220,23 +228,15 @@
 
 /* Result Styles */
 .result-success {
-  margin-left:5px;
+  margin-left: 5px;
   font-weight: bold;
   color: green;
 }
 
 .result-error {
-  margin-left:5px;
+  margin-left: 5px;
   font-weight: bold;
   color: red;
-}
-
-/* Loading Animation Styles */
-.loading-animation {
-  font-family: "Nunito", sans-serif;
-  font-size: 16px;
-  padding: 10px;
-  text-align: center;
 }
 
 /* Test Case Styles */
@@ -261,4 +261,24 @@
   font-size: 14px;
   padding: 2px 5px;
   border-radius: 5px;
+}
+
+div.loading-spinner {
+  /* border:none; */
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  font-size: 2.5rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

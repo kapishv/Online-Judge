@@ -36,10 +36,6 @@ const userSchema = new Schema({
     required: true,
   },
   refreshToken: [String],
-  codingScore: {
-    type: Number,
-    default: 0,
-  },
   solved: {
     type: [solvedSchema],
     default: [],

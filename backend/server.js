@@ -39,6 +39,7 @@ app.use("/auth", require("./routes/auth"));
 app.use("/logout", require("./routes/logout"));
 app.use("/refresh", require("./routes/refresh"));
 
+app.use("/submissions", require("./routes/api/submissions"))
 app.use("/problemset", require("./routes/api/problems"))
 app.use("/run", require("./routes/api/run"));
 app.use("/submit", require("./routes/api/submit"));

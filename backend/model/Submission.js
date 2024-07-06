@@ -23,7 +23,11 @@ const SubmissionSchema = new Schema({
     error: {
       type: String,
       required: true,
-    }
+    },
+  },
+  lang: {
+    type: String,
+    required: true,
   },
   code: {
     type: String,
