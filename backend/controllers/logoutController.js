@@ -22,7 +22,7 @@ const handleLogout = async (req, res) => {
   console.log(result);
 
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
-  res.sendStatus(204);
+  res.sendStatus(200);
 };
 
 module.exports = { handleLogout };

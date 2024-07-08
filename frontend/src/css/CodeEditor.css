@@ -7,7 +7,6 @@
   background-color: darkcyan;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-height: 50px;
 }
 
 .menu-bar .language-select {
@@ -21,14 +20,14 @@
 }
 
 .menu-bar .buttons {
-  margin-bottom: 10px;
+  padding: 6px 12px;
   display: flex;
   gap: 10px;
 }
 
 .theme-button,
 .refresh-button {
-  padding: 7px 10px;
+  padding: 5px 10px;
   border: none;
   border-radius: 4px;
   font-size: 16px;
@@ -69,7 +68,7 @@
 
 .code-editor {
   flex: 1;
-  min-height: 540px;
+  min-height: 570px;
 }
 
 /* Main Buttons and Console Container Styles */
@@ -84,7 +83,7 @@
   display: flex;
   justify-content: space-around;
   gap: 10px;
-  padding: 0 10px;
+  padding: 5px 10px;
   align-items: center;
   width: 100%;
 }

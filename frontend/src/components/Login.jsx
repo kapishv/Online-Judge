@@ -1,23 +1,23 @@
 import { useRef, useState, useEffect } from "react";
-import useAuth from "../hooks/useAuth";
+import { useContext } from "react";
+import AuthContext from "../context/AuthContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import "../css/Login.css";
 import axios from "../api/axios";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { Container, Row, Col, Button, Alert, Form as BootstrapForm } from "react-bootstrap";
 
 const LOGIN_URL = "/auth";
 
 const Login = () => {
-  const { setAuth } = useAuth();
+  const { manageAuth } = useContext(AuthContext);
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname;
 
   const userRef = useRef();
   const errRef = useRef();
 
-  const [user, setUser] = useState("");
-  const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
@@ -26,27 +26,21 @@ const Login = () => {
 
   useEffect(() => {
     setErrMsg("");
-  }, [user, pwd]);
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ username: user, password: pwd }),
+        JSON.stringify({ username: values.username, password: values.password }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
       const accessToken = response?.data?.accessToken;
-      setAuth({ user, accessToken });
-      setUser("");
-      setPwd("");
-      navigate(typeof from === "undefined" ? `/user/${user}` : from, {
-        replace: true,
-      });
+      manageAuth(accessToken);
+      navigate(location.state?.from?.pathname || `/user/${values.username}`, { replace: true });
     } catch (err) {
       console.error(err);
       if (!err?.response) {
@@ -59,51 +53,83 @@ const Login = () => {
         setErrMsg("Login Failed");
       }
       errRef.current.focus();
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  return (
-    <section className="login">
-      <p
-        ref={errRef}
-        className={errMsg ? "errmsg" : "offscreen"}
-        aria-live="assertive"
-      >
-        {errMsg}
-      </p>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          placeholder="Enter username"
-          ref={userRef}
-          autoComplete="off"
-          onChange={(e) => setUser(e.target.value)}
-          value={user}
-          required
-        />
+  const validationSchema = Yup.object({
+    username: Yup.string().required("Required"),
+    password: Yup.string().required("Required"),
+  });
 
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          placeholder="Enter password"
-          onChange={(e) => setPwd(e.target.value)}
-          value={pwd}
-          required
-        />
-        <button>Login</button>
-      </form>
-      <p>
-        Need an Account?
-        <br />
-        <span className="line">
-          <Link to="/register">Register</Link>
-        </span>
-      </p>
-    </section>
+  return (
+    <Container className="mt-5">
+      <Row className="justify-content-md-center">
+        <Col md="6">
+          <h1>Login</h1>
+          {errMsg && (
+            <Alert variant="danger" ref={errRef} aria-live="assertive">
+              {errMsg}
+            </Alert>
+          )}
+          <Formik
+            initialValues={{ username: "", password: "" }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({
+              handleSubmit,
+              handleChange,
+              values,
+              touched,
+              errors,
+              isSubmitting,
+            }) => (
+              <Form noValidate onSubmit={handleSubmit}>
+                <BootstrapForm.Group controlId="formUsername">
+                  <BootstrapForm.Label>Username</BootstrapForm.Label>
+                  <BootstrapForm.Control
+                    type="text"
+                    name="username"
+                    ref={userRef}
+                    value={values.username}
+                    onChange={handleChange}
+                    isInvalid={touched.username && !!errors.username}
+                    placeholder="Enter username"
+                  />
+                  <BootstrapForm.Control.Feedback type="invalid">
+                    {errors.username}
+                  </BootstrapForm.Control.Feedback>
+                </BootstrapForm.Group>
+
+                <BootstrapForm.Group controlId="formPassword">
+                  <BootstrapForm.Label>Password</BootstrapForm.Label>
+                  <BootstrapForm.Control
+                    type="password"
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    isInvalid={touched.password && !!errors.password}
+                    placeholder="Enter password"
+                  />
+                  <BootstrapForm.Control.Feedback type="invalid">
+                    {errors.password}
+                  </BootstrapForm.Control.Feedback>
+                </BootstrapForm.Group>
+
+                <Button type="submit" disabled={isSubmitting} className="mt-3">
+                  Login
+                </Button>
+              </Form>
+            )}
+          </Formik>
+          <p className="mt-3">
+            Need an Account? <Link to="/register">Register</Link>
+          </p>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

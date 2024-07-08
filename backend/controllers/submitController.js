@@ -4,6 +4,9 @@ const User = require("../model/User");
 const Submission = require("../model/Submission");
 
 const handleFail = async (username, title, pass, error, lang, code) => {
+  if (!code) {
+    code = "No Code!";
+  }
   await Submission.create({
     username,
     title,

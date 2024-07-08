@@ -1,6 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { FaSpinner } from "react-icons/fa";
+import {
+  FaSpinner,
+  FaSun,
+  FaMoon,
+  FaSync,
+  FaPlayCircle,
+  FaPaperPlane,
+  FaTerminal,
+} from "react-icons/fa";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
@@ -177,10 +185,10 @@ const CodeEditor = () => {
         </select>
         <div className="buttons">
           <button onClick={switchTheme} className="theme-button">
-            Switch Theme
+            {theme == "github" ? <FaMoon /> : <FaSun />}
           </button>
           <button onClick={refreshCode} className="refresh-button">
-            Refresh Code
+            <FaSync />
           </button>
         </div>
       </div>
@@ -257,13 +265,13 @@ const CodeEditor = () => {
             className="console-button"
             onClick={() => setShowConsole(!showConsole)}
           >
-            Console
+            <FaTerminal /> Console
           </button>
           <button className="run-button" onClick={handleRun}>
-            Run
+            <FaPlayCircle /> Run
           </button>
           <button className="submit-button" onClick={handleSubmit}>
-            Submit
+            <FaPaperPlane /> Submit
           </button>
         </div>
       </div>

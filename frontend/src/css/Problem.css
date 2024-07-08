@@ -1,48 +1,85 @@
-.problem-item {
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .problem-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-  
+.problem-card {
+  transition: transform 0.2s ease-in-out;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.problem-card:hover {
+  transform: scale(1.02);
+}
+
+.problem-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.problem-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.problem-attribute {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.problem-tag {
+  margin: 4px;
+}
+
+.attribute-label {
+  display: none;
+  font-weight: bold;
+  font-size: 1em;
+  color: #555;
+}
+
+.attribute-value {
+  font-size: 1.1em;
+}
+
+.problem-title {
+  font-weight: bold;
+}
+
+.problem-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
   .problem-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    font-size: 20px;
-  }
-  
-  .problem-item:hover .problem-content {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .problem-attribute {
-    flex: 1;
+    flex-direction: column;
     text-align: left;
   }
-  
-  .problem-attribute:last-child {
-    text-align: right;
+
+  .problem-attribute {
+    width: 100%;
+    padding: 5px 0;
   }
-  
-  .problem-tag {
+
+  .problem-tags {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .attribute-label {
+    display: inline-block;
     margin-right: 5px;
-    padding: 5px 5px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    background-color: #f0f0f0;
-    font-size: 16px;
   }
-  
+}
+
+.easy {
+  color: green;
+}
+
+.medium {
+  color: orange;
+}
+
+.hard {
+  color: red;
+}

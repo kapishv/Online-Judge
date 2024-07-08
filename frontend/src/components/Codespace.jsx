@@ -1,6 +1,6 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ProblemPage from "./ProblemPage";
 import CodeEditor from "./CodeEditor";
 import Miss from "./Miss";
@@ -8,14 +8,24 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import "../css/ResizeHandler.css";
 
 function Codespace() {
+  const { title } = useParams();
   const [problem, setProblem] = useState(null);
-  const location = useLocation();
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1000);
   const { get } = useAxiosPrivate();
 
   useEffect(() => {
-    const { makeRequest, cleanup } = get(
-      `/problemset/${location.pathname.split("/").pop()}`
-    );
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 1000);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const { makeRequest, cleanup } = get(`/problemset/${title}`);
 
     const fetchProblems = async () => {
       const data = await makeRequest();
@@ -30,16 +40,37 @@ function Codespace() {
     return () => {
       cleanup();
     };
-  }, []);
+  }, [title]);
 
   if (problem) {
+    if (isSmallScreen) {
+      return (
+        <div
+          style={{
+            padding: "10px",
+            overflow: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          <div>
+            <ProblemPage p={problem} />
+          </div>
+          <div>
+            <CodeEditor />
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <PanelGroup direction="horizontal">
+      <PanelGroup direction="horizontal" style={{ padding: "10px" }}>
         <Panel
           defaultSize={50}
           minSize={30}
           maxSize={70}
-          style={{ overflow: "auto", height: `100%` }}
+          style={{ overflow: "auto", height: `calc(100vh - 130px)` }}
         >
           <ProblemPage p={problem} />
         </Panel>
@@ -50,9 +81,9 @@ function Codespace() {
           defaultSize={50}
           minSize={30}
           maxSize={70}
-          style={{ overflow: "auto", height: `100%` }}
+          style={{ overflow: "auto", height: `calc(100vh - 130px)` }}
         >
-          <CodeEditor/>
+          <CodeEditor />
         </Panel>
       </PanelGroup>
     );

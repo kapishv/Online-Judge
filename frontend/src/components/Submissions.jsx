@@ -1,4 +1,12 @@
 import { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  InputGroup,
+  ListGroup,
+} from "react-bootstrap";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Submission from "./Submission";
 import "../css/Submissions.css";
@@ -52,43 +60,57 @@ const Submissions = () => {
       filtered = filtered.filter((s) => s.lang === selectedLanguage);
     }
 
+    filtered.sort((a, b) => {
+      return new Date(b.timestamp) - new Date(a.timestamp);
+    });
+
     setFilteredSubmissions(filtered);
   };
 
   return (
-    <div className="submissions-list-container">
+    <Container className="submissions-list-container">
       <h2>Submission List</h2>
-      <div className="options">
-        <input
+      <InputGroup className="mb-3">
+        <Form.Control
           type="text"
           placeholder="Search by title"
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <select value={selectedLanguage} onChange={handleLanguageChange}>
+        <Form.Select value={selectedLanguage} onChange={handleLanguageChange}>
           <option value="all">All</option>
           <option value="javascript">JavaScript</option>
           <option value="c_cpp">C++</option>
           <option value="python">Python</option>
-        </select>
-      </div>
-      <div className="submissions-header">
-        <div className="header-item">Problem</div>
-        <div className="header-item">Language</div>
-        <div className="header-item">Result</div>
-        <div className="header-item">Submitted At</div>
-        <div className="header-item">Code</div>
-      </div>
+        </Form.Select>
+      </InputGroup>
+      <Row className="submissions-header d-none d-md-flex">
+        <Col md={3} className="header-item">
+          Problem
+        </Col>
+        <Col md={2} className="header-item">
+          Language
+        </Col>
+        <Col md={3} className="header-item">
+          Result
+        </Col>
+        <Col md={3} className="header-item">
+          Submitted At
+        </Col>
+        <Col md={1} className="header-item">
+          Code
+        </Col>
+      </Row>
       {filteredSubmissions.length ? (
-        <ul className="submissions-list">
+        <ListGroup className="submissions-list">
           {filteredSubmissions.map((submission, i) => (
             <Submission key={i} submission={submission} />
           ))}
-        </ul>
+        </ListGroup>
       ) : (
         <p>No Submissions to display</p>
       )}
-    </div>
+    </Container>
   );
 };
 

@@ -1,0 +1,11 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 56px; /* Height of the Navbar */
+  padding-bottom: 56px; /* Height of the Footer */
+}
+
+.footer {
+  margin-top: auto;
+}

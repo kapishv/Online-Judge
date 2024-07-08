@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  InputGroup,
+  ListGroup,
+} from "react-bootstrap";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Problem from "./Problem";
-import "../css/Problems.css";
+import '../css/Problems.css';
 
 const Problems = () => {
   const [problems, setProblems] = useState([]);
@@ -32,17 +40,14 @@ const Problems = () => {
     filterProblems(searchTerm);
   }, [problems, searchTerm, sortBy]);
 
-  // Handle search input change
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  // Handle sorting
   const handleSortChange = (e) => {
     setSortBy(e.target.value);
   };
 
-  // Filtering problems based on search term
   const filterProblems = (term) => {
     let filtered = problems;
 
@@ -54,13 +59,10 @@ const Problems = () => {
       );
     }
 
-    // Sort problems based on selected criteria
     filtered = sortProblems(filtered, sortBy);
-
     setFilteredProblems(filtered);
   };
 
-  // Sorting problems based on selected criteria
   const sortProblems = (problemsList, criteria) => {
     const sorted = [...problemsList].sort((a, b) => {
       if (criteria === "title") {
@@ -77,37 +79,37 @@ const Problems = () => {
   };
 
   return (
-    <div className="problems-list-container">
+    <Container className="problems-list-container">
       <h2>Problem List</h2>
-      <div className="options">
-        <input
+      <InputGroup className="mb-3">
+        <Form.Control
           type="text"
           placeholder="Search by title or tag"
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <select value={sortBy} onChange={handleSortChange}>
+        <Form.Select value={sortBy} onChange={handleSortChange}>
           <option value="title">Sort by Title</option>
           <option value="difficulty">Sort by Difficulty</option>
           <option value="codingScore">Sort by Coding Score</option>
-        </select>
-      </div>
-      <div className="problems-header">
-        <div className="header-item">Coding Score</div>
-        <div className="header-item">Difficulty</div>
-        <div className="header-item">Title</div>
-        <div className="header-item">Tags</div>
-      </div>
+        </Form.Select>
+      </InputGroup>
+      <Row className="problems-header d-none d-md-flex">
+        <Col className="header-item">Coding Score</Col>
+        <Col className="header-item">Difficulty</Col>
+        <Col className="header-item">Title</Col>
+        <Col className="header-item">Tags</Col>
+      </Row>
       {filteredProblems.length ? (
-        <ul className="problems-list">
+        <ListGroup className="problems-list">
           {filteredProblems.map((p, i) => (
             <Problem key={i} p={p} />
           ))}
-        </ul>
+        </ListGroup>
       ) : (
         <p>No problems to display</p>
       )}
-    </div>
+    </Container>
   );
 };
 

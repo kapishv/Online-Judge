@@ -1,119 +1,113 @@
-/* Base styles */
-.submission-item {
-  border-radius: 8px;
-  /* overflow: hidden; */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.submission-item .submission-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 20px;
-}
-
-/* Different hues for success and errors */
-.submission-item.success .submission-content {
-  background-color: #d4edda; /* Green for success */
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.1);
-}
-
-.submission-item.error .submission-content {
-  background-color: #f8d7da; /* Red for general errors */
-  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.1);
-}
-
-/* Different hues for specific errors */
-.submission-item.error-timeout .submission-content {
-  background-color: #ffe5b4; /* Orange for timeout errors */
-  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.1);
-}
-
-.submission-item.error-compile .submission-content {
-  background-color: #ffffcd; /* Yellow for compile errors */
-  box-shadow: 0 4px 8px rgba(23, 162, 184, 0.1);
-}
-
-/* Other existing styles */
-.submission-item .submission-attribute {
-  flex: 1;
-  text-align: left;
-}
-
-.submission-item .submission-attribute:last-child {
-  text-align: right;
-}
-
-.submission-item .view-code-button {
-  background-color: #007bff;
-  color: #fff;
+.submission-card {
+  transition: transform 0.2s ease-in-out;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.submission-item .view-code-button:hover {
-  background-color: #0056b3;
+.submission-card:hover {
+  transform: scale(1.02);
 }
 
-.submission-item .code-overlay {
+.submission-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.submission-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.submission-attribute {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.submission-card.success {
+  color: green;
+}
+
+.submission-card.error {
+  color: red;
+}
+
+.attribute-label {
+  display: none;
+  font-weight: bold;
+  font-size: 1em;
+  color: #555;
+}
+
+.attribute-value {
+  font-size: 1.1em;
+}
+
+.submission-title {
+  font-weight: bold;
+}
+
+.code-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1050;
 }
 
-.submission-item .code-container {
-  background-color: #fff;
+.code-container {
+  background: white;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
   position: relative;
   max-width: 90%;
-  max-height: 80%;
+  max-height: 90%;
   overflow-y: auto;
 }
 
-.submission-item .code-container pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  margin: 20px 0;
-}
-
-.submission-item .copy-button,
-.submission-item .close-button {
-  background-color: #28a745;
-  color: #fff;
+.close-button,
+.copy-button {
+  background: none;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
   cursor: pointer;
+  font-size: 1.5em;
   position: absolute;
   top: 10px;
 }
 
-.submission-item .copy-button {
+.close-button {
   right: 10px;
 }
 
-.submission-item .close-button {
-  right: 100px;
+.copy-button {
+  right: 50px;
 }
 
-.submission-item .copy-button:hover {
-  background-color: #218838;
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-top: 40px;
 }
 
-.submission-item .close-button:hover {
-  background-color: #218838;
+@media (max-width: 767px) {
+  .submission-content {
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .submission-attribute {
+    width: 100%;
+    padding: 5px 0;
+  }
+
+  .attribute-label {
+    display: inline-block;
+    margin-right: 5px;
+  }
 }

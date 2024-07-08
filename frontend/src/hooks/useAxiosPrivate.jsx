@@ -1,12 +1,10 @@
 import { axiosPrivate } from "../api/axios";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import useRefreshToken from "./useRefreshToken";
-import useAuth from "./useAuth";
+import AuthContext from "../context/AuthContext";
 
 const useAxiosPrivate = () => {
-  const refresh = useRefreshToken();
-  const { auth } = useAuth();
+  const { auth, refresh } = useContext(AuthContext);
   const navigate = useNavigate();
     const location = useLocation();
 

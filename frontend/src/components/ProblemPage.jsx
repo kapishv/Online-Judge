@@ -1,23 +1,29 @@
-import "../css/ProblemPage.css";
 import React, { useRef, useState } from "react";
+import { FaCopy, FaCheck } from "react-icons/fa";
+import "../css/ProblemPage.css";
 
 function ProblemPage({ p }) {
   const sampleInputRef = useRef(null);
   const sampleOutputRef = useRef(null);
-  const [notification, setNotification] = useState("");
+  const [copyStatus, setCopyStatus] = useState({ input: false, output: false });
 
   const copyToClipboard = (ref, type) => {
     navigator.clipboard.writeText(ref.current.textContent).then(() => {
-      setNotification(`${type} copied to clipboard!`);
-      setTimeout(() => setNotification(""), 3000);
+      setCopyStatus((prevStatus) => ({
+        ...prevStatus,
+        [type]: true,
+      }));
+      setTimeout(() => {
+        setCopyStatus((prevStatus) => ({
+          ...prevStatus,
+          [type]: false,
+        }));
+      }, 1000);
     });
   };
 
   return (
     <div className="problem-page">
-      {notification && (
-        <div className={`copy-notification show`}>{notification}</div>
-      )}
       <h1>{p?.title}</h1>
       <div className="problem-details">
         <span className="detail">Difficulty: {p?.difficulty}</span>
@@ -71,10 +77,10 @@ function ProblemPage({ p }) {
         Sample Input
         <button
           type="button"
-          className="copy-button"
-          onClick={() => copyToClipboard(sampleInputRef, "Sample Input")}
+          className="problem-page-copy-button"
+          onClick={() => copyToClipboard(sampleInputRef, "input")}
         >
-          Copy
+          {copyStatus.input ? <FaCheck /> : <FaCopy />}
         </button>
       </h2>
       <pre ref={sampleInputRef}>{p?.sampleInput}</pre>
@@ -82,10 +88,10 @@ function ProblemPage({ p }) {
         Sample Output
         <button
           type="button"
-          className="copy-button"
-          onClick={() => copyToClipboard(sampleOutputRef, "Sample Output")}
+          className="problem-page-copy-button"
+          onClick={() => copyToClipboard(sampleOutputRef, "output")}
         >
-          Copy
+          {copyStatus.output ? <FaCheck /> : <FaCopy />}
         </button>
       </h2>
       <pre ref={sampleOutputRef}>{p?.sampleOutput}</pre>

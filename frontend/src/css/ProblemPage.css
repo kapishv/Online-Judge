@@ -60,36 +60,18 @@
     font-size: 16px;
   }
   
-  .copy-button {
+  .problem-page-copy-button {
     background-color: darkcyan;
     color: white;
     border: none;
     padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 16px;
     transition: background-color 0.3s ease;
   }
   
-  .copy-button:hover {
+  .problem-page-copy-button:hover {
     background-color: #0b6464;
-  }
-  
-  .copy-notification {
-    position: fixed;
-    top: 13%;
-    background-color: purple;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    font-size: 16px;
-  }
-  
-  .copy-notification.show {
-    opacity: 1;
   }
   

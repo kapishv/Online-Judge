@@ -1,0 +1,22 @@
+.home {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.home p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.home a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.home a:hover {
+  text-decoration: underline;
+}

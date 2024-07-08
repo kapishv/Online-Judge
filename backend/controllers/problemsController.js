@@ -2,7 +2,6 @@ const Problem = require("../model/Problem");
 
 const getAllProblems = async (req, res) => {
   const problems = await Problem.find({}, "title difficulty tags codingScore");
-  if (!problems) return res.status(204).json({ message: "No problems found" });
   res.json(problems);
 };
 

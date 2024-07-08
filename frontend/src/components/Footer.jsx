@@ -1,11 +1,14 @@
-import "../css/Footer.css";
+import { Navbar, Container } from "react-bootstrap";
 
 const Footer = () => {
-  const today = new Date();
   return (
-    <footer className="Footer">
-      <p>Copyright &copy; {today.getFullYear()} CodeCraft</p>
-    </footer>
+    <Navbar bg="dark" variant="dark" fixed="bottom" className="footer mt-auto py-3">
+      <Container className="justify-content-center">
+        <span className="text-light">
+          Copyright &copy; {new Date().getFullYear()} CodeCraft
+        </span>
+      </Container>
+    </Navbar>
   );
 };
 

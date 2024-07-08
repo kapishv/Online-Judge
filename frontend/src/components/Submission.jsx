@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
-import { FaFileCode, FaTimes, FaCopy } from "react-icons/fa";
+import { Row, Col, Button, Modal, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { FaFileCode, FaCopy, FaCheck } from "react-icons/fa";
 import "../css/Submission.css";
 
 const Submission = ({ submission }) => {
   const [showCode, setShowCode] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (showCode) {
@@ -16,18 +19,15 @@ const Submission = ({ submission }) => {
     };
   }, [showCode]);
 
-  const toggleShowCode = () => {
-    setShowCode(!showCode);
+  const showCodeModal = () => {
+    setShowCode(true);
   };
 
   const copyCodeToClipboard = () => {
-    navigator.clipboard.writeText(submission.code);
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target.className === "code-overlay") {
-      setShowCode(false);
-    }
+    navigator.clipboard.writeText(submission.code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1000);
+    });
   };
 
   const formatLanguage = (lang) => {
@@ -56,53 +56,98 @@ const Submission = ({ submission }) => {
   const getSubmissionClass = () => {
     if (submission.status.success) {
       return "success";
-    } else if (submission.status.error) {
-      switch (submission.status.error) {
-        case "Time Limit Exceeded":
-          return "error-timeout";
-        case "Compilation Error":
-          return "error-compile";
-        default:
-          return "error";
-      }
+    } else if (submission.status.error === "Wrong Answer") {
+      return "error";
     } else {
       return "";
     }
   };
 
   return (
-    <li className={`submission-item ${getSubmissionClass()}`}>
-      <div className="submission-content">
-        <div className="submission-attribute submission-title">
-          {submission.title}
-        </div>
-        <div className="submission-attribute submission-lang">
-          {formatLanguage(submission.lang)}
-        </div>
-        <div className="submission-attribute submission-status">
-          {submission.status.success ? "Success" : "Failed"}
-        </div>
-        <div className="submission-attribute submission-date">
-          {formatDate(submission.timestamp)}
-        </div>
-        <button onClick={toggleShowCode} className="view-code-button">
-          {showCode ? "Hide Code" : <FaFileCode />}
-        </button>
-      </div>
-      {showCode && (
-        <div className="code-overlay" onClick={handleOverlayClick}>
-          <div className="code-container">
-            <button onClick={() => setShowCode(false)} className="close-button">
-              <FaTimes />
-            </button>
-            <button onClick={copyCodeToClipboard} className="copy-button">
-              <FaCopy />
-            </button>
-            <pre>{submission.code}</pre>
+    <>
+      <Card className={`mb-3 submission-card ${getSubmissionClass()}`}>
+        <Card.Body>
+          <Row className="submission-content">
+            <Col
+              xs={12}
+              md={3}
+              className="submission-attribute submission-title"
+            >
+              <span className="attribute-label d-md-none">Problem:</span>
+              <Link
+                to={`/problemset/${submission.title}`}
+                className="submission-link"
+              >
+                <span className="attribute-value">{submission.title}</span>
+              </Link>
+            </Col>
+            <Col
+              xs={12}
+              md={2}
+              className="submission-attribute submission-lang"
+            >
+              <span className="attribute-label d-md-none">Language:</span>
+              <span className="attribute-value">
+                {formatLanguage(submission.lang)}
+              </span>
+            </Col>
+            <Col
+              xs={12}
+              md={3}
+              className="submission-attribute submission-status"
+            >
+              <span className="attribute-label d-md-none">Result:</span>
+              <span className="attribute-value">
+                {submission.status.success
+                  ? "Accepted"
+                  : `${submission.status.error} on test case ${
+                      submission.status.pass + 1
+                    }`}
+              </span>
+            </Col>
+            <Col
+              xs={12}
+              md={3}
+              className="submission-attribute submission-date"
+            >
+              <span className="attribute-label d-md-none">Submitted At:</span>
+              <span className="attribute-value">
+                {formatDate(submission.timestamp)}
+              </span>
+            </Col>
+            <Col
+              xs={12}
+              md={1}
+              className="submission-attribute submission-code"
+            >
+              <span className="attribute-label d-md-none">Code:</span>
+              <Button variant="dark" onClick={showCodeModal}>
+                <FaFileCode />
+              </Button>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+      <Modal show={showCode} onHide={() => setShowCode(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {submission.status.success
+              ? "Accepted"
+              : `${submission.status.error} on test case ${
+                  submission.status.pass + 1
+                }`}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button variant="dark" onClick={copyCodeToClipboard}>
+              {copied ? <FaCheck /> : <FaCopy />}
+            </Button>
           </div>
-        </div>
-      )}
-    </li>
+          <pre>{submission.code}</pre>
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };
 

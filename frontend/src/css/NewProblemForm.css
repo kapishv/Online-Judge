@@ -61,6 +61,10 @@ button {
   transition: background-color 0.3s ease;
 }
 
+.newProblemForm button[type="submit"] {
+  margin-top:10px;
+}
+
 .newProblemForm button:hover {
   background-color: #0b6464;
 }
@@ -94,4 +98,18 @@ button.deleteTestcase {
 button.deleteTestcase:hover {
   background: none;
   color: red;
+}
+
+.react-tagsinput > span{
+  flex:1;
+  padding-right:5px;
+}
+
+.react-tagsinput-input {
+  flex: 1;
+}
+
+.react-tagsinput-remove {
+  color:#638421;
+  text-decoration: none;
 }

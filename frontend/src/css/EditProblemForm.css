@@ -48,7 +48,7 @@ button {
 
 .editProblemForm div {
   display: flex;
-  gap: 10px;
+  gap:5px;
 }
 
 .update-button {
@@ -60,6 +60,7 @@ button {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top:10px;
   background-color: orange;
 }
 
@@ -72,6 +73,7 @@ button {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top:10px;
   background-color: red;
 }
 
@@ -140,4 +142,18 @@ button.deleteTestcase {
 button.deleteTestcase:hover {
   background: none;
   color: red;
+}
+
+.react-tagsinput > span{
+  flex:1;
+  padding-right:5px;
+}
+
+.react-tagsinput-input {
+  flex: 1;
+}
+
+.react-tagsinput-remove {
+  color:#638421;
+  text-decoration: none;
 }
