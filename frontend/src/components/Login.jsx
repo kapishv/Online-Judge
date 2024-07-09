@@ -42,7 +42,6 @@ const Login = () => {
       manageAuth(accessToken);
       navigate(location.state?.from?.pathname || `/user/${values.username}`, { replace: true });
     } catch (err) {
-      console.error(err);
       if (!err?.response) {
         setErrMsg("No Server Response");
       } else if (err.response?.status === 400) {

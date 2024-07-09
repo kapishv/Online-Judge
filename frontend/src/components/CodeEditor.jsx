@@ -10,7 +10,7 @@ import {
   FaTerminal,
 } from "react-icons/fa";
 import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/theme-github";
@@ -19,7 +19,7 @@ import "../css/CodeEditor.css";
 
 const CodeEditor = () => {
   const [code, setCode] = useState("");
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState("java");
   const [theme, setTheme] = useState("github");
   const [showConsole, setShowConsole] = useState(false);
   const [activeTab, setActiveTab] = useState("input");
@@ -84,7 +84,6 @@ const CodeEditor = () => {
     });
     const data = await makeRequest();
     if (data) {
-      console.log("Run Response:", data);
       if (data.success) {
         setOutputText(
           <div className="output-div">
@@ -104,7 +103,7 @@ const CodeEditor = () => {
             <br />
             <span className="info-text">Output:</span>
             <br />
-            <pre className="output-text">{data.error.message}</pre>
+            <pre className="output-text">{data.output}</pre>
           </div>
         );
       }
@@ -129,7 +128,6 @@ const CodeEditor = () => {
     );
     const data = await makeRequest();
     if (data) {
-      console.log("Submit Response:", data);
       if (data.success) {
         setVerdictText(
           <div className="verdict-div">
@@ -179,7 +177,7 @@ const CodeEditor = () => {
           onChange={(e) => setLanguage(e.target.value)}
           className="language-select"
         >
-          <option value="javascript">JavaScript</option>
+          <option value="java">Java</option>
           <option value="python">Python</option>
           <option value="c_cpp">C++</option>
         </select>

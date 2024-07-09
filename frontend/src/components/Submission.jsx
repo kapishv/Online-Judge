@@ -34,8 +34,8 @@ const Submission = ({ submission }) => {
     switch (lang) {
       case "c_cpp":
         return "C++";
-      case "javascript":
-        return "JavaScript";
+      case "java":
+        return "Java";
       case "python":
         return "Python";
       default:

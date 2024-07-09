@@ -79,7 +79,7 @@ const Submissions = () => {
         />
         <Form.Select value={selectedLanguage} onChange={handleLanguageChange}>
           <option value="all">All</option>
-          <option value="javascript">JavaScript</option>
+          <option value="java">Java</option>
           <option value="c_cpp">C++</option>
           <option value="python">Python</option>
         </Form.Select>

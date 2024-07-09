@@ -48,18 +48,12 @@ const EditProblemForm = ({ p, sp }) => {
         `/problemset/${location.pathname.split("/").pop()}`,
         p
       );
-      const data = await makeRequest();
-      if (data) {
-        console.log("Edited Problem:", data);
-      }
+      await makeRequest();
     } else if (action === "delete") {
       const { makeRequest } = del(
         `/problemset/${location.pathname.split("/").pop()}`
       );
-      const data = await makeRequest();
-      if (data) {
-        console.log("Deleted Problem:", data);
-      }
+      await makeRequest();
     }
 
     navigate("/problemset");

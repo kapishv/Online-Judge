@@ -3,19 +3,33 @@ const fs = require("fs");
 const path = require("path");
 const { v4: uuid } = require("uuid");
 
-const codeDir = path.join(__dirname, "..", "py", "codes");
-const inputDir = path.join(__dirname, "..", "py", "inputs");
+const codeDir = path.join(__dirname, "..", "java", "codes");
+const outputDir = path.join(__dirname, "..", "java", "outputs");
+const inputDir = path.join(__dirname, "..", "java", "inputs");
 
-[codeDir, inputDir].forEach(
+[codeDir, outputDir, inputDir].forEach(
   (dir) => !fs.existsSync(dir) && fs.mkdirSync(dir, { recursive: true })
 );
 
-const handlePythonRun = async (code, input) => {
-  const cleanup = (files) => {
+const getClassName = (code) => {
+  const classMatch = code.match(/public\s+class\s+(\w+)|class\s+(\w+)/);
+  return classMatch ? classMatch[1] || classMatch[2] : null;
+};
+
+const handleJavaRun = async (code, input) => {
+  const cleanup = (jobID, files) => {
     files.forEach((file) => fs.existsSync(file) && fs.unlinkSync(file));
+    const jobCodeDir = path.join(codeDir, jobID);
+    const jobOutputDir = path.join(outputDir, jobID);
+    if (fs.existsSync(jobCodeDir)) {
+      fs.rmSync(jobCodeDir, { recursive: true, force: true });
+    }
+    if (fs.existsSync(jobOutputDir)) {
+      fs.rmSync(jobOutputDir, { recursive: true, force: true });
+    }
   };
 
-  let jobID, codeFilePath, inputFilePath;
+  let jobID, className, codeFilePath, classFilePath, inputFilePath;
 
   try {
     if (!code) {
@@ -26,17 +40,59 @@ const handlePythonRun = async (code, input) => {
       };
     }
 
+    className = getClassName(code);
+    if (!className) {
+      return {
+        success: false,
+        error: "Class name not found!",
+        output: "No valid class name found in the code.",
+      };
+    }
+
     jobID = uuid();
-    codeFilePath = path.join(codeDir, `${jobID}.py`);
+    codeFilePath = path.join(codeDir, jobID, `${className}.java`);
+    classFilePath = path.join(outputDir, jobID, `${className}.class`);
     inputFilePath = path.join(inputDir, `${jobID}.txt`);
+
+    fs.mkdirSync(path.join(codeDir, jobID), { recursive: true });
+    fs.mkdirSync(path.join(outputDir, jobID), { recursive: true });
 
     fs.writeFileSync(codeFilePath, code);
     fs.writeFileSync(inputFilePath, input || "");
 
-    // Execute the Python script using spawn
-    const execProcess = spawn("python3", [codeFilePath], {
-      stdio: ["pipe", "pipe", "pipe"], // Adding 'pipe' for stderr
+    // Compile the Java code using spawn
+    const compileProcess = spawn("javac", [
+      "-d",
+      path.join(outputDir, jobID),
+      codeFilePath,
+    ]);
+    let compileError = "";
+
+    compileProcess.stderr.on("data", (data) => {
+      compileError += data.toString();
     });
+
+    await new Promise((resolve, reject) => {
+      compileProcess.on("close", (code) => {
+        if (code !== 0) {
+          compileError = compileError.replace(
+            new RegExp(codeFilePath, "g"),
+            "file"
+          );
+          return reject({ error: "Compilation Error", output: compileError });
+        }
+        resolve();
+      });
+    });
+
+    // Execute the compiled program with input, and handle time limit using spawn
+    const execProcess = spawn(
+      "java",
+      ["-cp", path.join(outputDir, jobID), className],
+      {
+        stdio: ["pipe", "pipe", "pipe"],
+      }
+    );
 
     let stdout = "";
     let stderr = "";
@@ -108,8 +164,8 @@ const handlePythonRun = async (code, input) => {
       output: error.output || "",
     };
   } finally {
-    cleanup([codeFilePath, inputFilePath]);
+    cleanup(jobID, [codeFilePath, inputFilePath, classFilePath]);
   }
 };
 
-module.exports = { handlePythonRun };
+module.exports = { handleJavaRun };

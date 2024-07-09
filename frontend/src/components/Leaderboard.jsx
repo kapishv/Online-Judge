@@ -14,7 +14,6 @@ const Leaderboard = () => {
     const fetchLeaderboardData = async () => {
       const data = await makeRequest();
       if (data) {
-        console.log(data);
         const formattedData = formatLeaderboardData(data);
         setLeaderboardData(formattedData);
       }

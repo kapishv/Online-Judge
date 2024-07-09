@@ -42,10 +42,7 @@ const NewProblemForm = ({ p, sp }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { makeRequest } = post("/problemset", p);
-    const data = await makeRequest();
-    if (data) {
-      console.log("Created Problem:", data);
-    }
+    await makeRequest();
     navigate("/problemset");
   };
 

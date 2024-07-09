@@ -1,6 +1,6 @@
 const { handleCppRun } = require("./handleCppRun.js");
 const { handlePythonRun } = require("./handlePythonRun.js");
-const { handleJSRun } = require("./handleJSRun.js");
+const { handleJavaRun } = require("./handleJavaRun.js");
 
 const handleRun = async (req, res) => {
   const { lang = "c_cpp", code, input } = req.body;
@@ -11,8 +11,8 @@ const handleRun = async (req, res) => {
     } else if (lang === "python") {
       const result = await handlePythonRun(code, input);
       res.status(200).json(result);
-    } else if (lang === "javascript") {
-      const result = await handleJSRun(code, input);
+    } else if (lang === "java") {
+      const result = await handleJavaRun(code, input);
       res.status(200).json(result);
     } else {
       res

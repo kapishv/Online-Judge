@@ -30,7 +30,6 @@ function EditProblem() {
     const fetchProblems = async () => {
       const data = await makeRequest();
       if (data) {
-        console.log("Problem:", data);
         setProblem(data);
       }
     };

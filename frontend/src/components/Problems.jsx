@@ -24,7 +24,6 @@ const Problems = () => {
     const fetchProblems = async () => {
       const data = await makeRequest();
       if (data) {
-        console.log("Data:", data);
         setProblems(data);
       }
     };

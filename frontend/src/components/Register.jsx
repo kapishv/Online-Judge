@@ -45,7 +45,6 @@ const Register = () => {
       manageAuth(accessToken);
       navigate(`/user/${values.username}`, { replace: true });
     } catch (err) {
-      console.error(err);
       if (!err?.response) {
         setFieldError("general", "No Server Response");
       } else if (err.response?.status === 409) {
