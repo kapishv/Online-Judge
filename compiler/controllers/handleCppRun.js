@@ -3,19 +3,20 @@ const fs = require("fs");
 const path = require("path");
 const { v4: uuid } = require("uuid");
 
-const codeDir = path.join(__dirname, "..", "py", "codes");
-const inputDir = path.join(__dirname, "..", "py", "inputs");
+const codeDir = path.join(__dirname, "..", "cpp", "codes");
+const outputDir = path.join(__dirname, "..", "cpp", "outputs");
+const inputDir = path.join(__dirname, "..", "cpp", "inputs");
 
-[codeDir, inputDir].forEach(
+[codeDir, outputDir, inputDir].forEach(
   (dir) => !fs.existsSync(dir) && fs.mkdirSync(dir, { recursive: true })
 );
 
-const handlePythonRun = async (code, input) => {
+const handleCppRun = async (code, input) => {
   const cleanup = (files) => {
     files.forEach((file) => fs.existsSync(file) && fs.unlinkSync(file));
   };
 
-  let jobID, codeFilePath, inputFilePath;
+  let jobID, codeFilePath, outputFilePath, inputFilePath;
 
   try {
     if (!code) {
@@ -27,15 +28,37 @@ const handlePythonRun = async (code, input) => {
     }
 
     jobID = uuid();
-    codeFilePath = path.join(codeDir, `${jobID}.py`);
+    codeFilePath = path.join(codeDir, `${jobID}.cpp`);
+    outputFilePath = path.join(outputDir, `${jobID}.out`);
     inputFilePath = path.join(inputDir, `${jobID}.txt`);
 
     fs.writeFileSync(codeFilePath, code);
     fs.writeFileSync(inputFilePath, input || "");
 
-    // Execute the Python script using spawn
-    const execProcess = spawn("python3", [codeFilePath], {
-      stdio: ["pipe", "pipe", "pipe"], // Adding 'pipe' for stderr
+    // Compile the C++ code using spawn
+    const compileProcess = spawn("g++", ["-o", outputFilePath, codeFilePath]);
+    let compileError = "";
+
+    compileProcess.stderr.on("data", (data) => {
+      compileError += data.toString();
+    });
+
+    await new Promise((resolve, reject) => {
+      compileProcess.on("close", (code) => {
+        if (code !== 0) {
+          compileError = compileError.replace(
+            new RegExp(codeFilePath, "g"),
+            "file"
+          );
+          return reject({ error: "Compilation Error", output: compileError });
+        }
+        resolve();
+      });
+    });
+
+    // Execute the compiled program with input, and handle time limit using spawn
+    const execProcess = spawn(outputFilePath, {
+      stdio: ["pipe", "pipe", "pipe"],
     });
 
     let stdout = "";
@@ -108,8 +131,8 @@ const handlePythonRun = async (code, input) => {
       output: error.output || "",
     };
   } finally {
-    cleanup([codeFilePath, inputFilePath]);
+    cleanup([codeFilePath, inputFilePath, outputFilePath]);
   }
 };
 
-module.exports = { handlePythonRun };
+module.exports = { handleCppRun };
