@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { axiosPrivate } from "../api/axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 import {
   FaSpinner,
   FaSun,
@@ -33,6 +34,7 @@ const CodeEditor = ({ p }) => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { auth } = useContext(AuthContext);
 
   useEffect(() => {
     if (outputRef.current) {
@@ -71,15 +73,15 @@ const CodeEditor = ({ p }) => {
   const refreshCode = () => setCode("");
 
   const handleRun = async () => {
-    setShowConsole(true);
-    setActiveTab("output");
-    setVerdictText(<div></div>);
-    setOutputText(
-      <div className="loading-spinner">
-        <FaSpinner className="spinner" />
-      </div>
-    );
-    try {
+    if (auth.isAuthenticated) {
+      setShowConsole(true);
+      setActiveTab("output");
+      setVerdictText(<div></div>);
+      setOutputText(
+        <div className="loading-spinner">
+          <FaSpinner className="spinner" />
+        </div>
+      );
       const response = await axiosPrivate.post("/run", {
         input: inputText,
         code: code,
@@ -111,21 +113,21 @@ const CodeEditor = ({ p }) => {
           );
         }
       }
-    } catch (error) {
+    } else {
       navigate("/login", { state: { from: location }, replace: true });
     }
   };
 
   const handleSubmit = async () => {
-    setShowConsole(true);
-    setActiveTab("verdict");
-    setOutputText(<div></div>);
-    setVerdictText(
-      <div className="loading-spinner">
-        <FaSpinner className="spinner" />
-      </div>
-    );
-    try {
+    if (auth.isAuthenticated) {
+      setShowConsole(true);
+      setActiveTab("verdict");
+      setOutputText(<div></div>);
+      setVerdictText(
+        <div className="loading-spinner">
+          <FaSpinner className="spinner" />
+        </div>
+      );
       const response = await axiosPrivate.post(`/submit/${p.title}`, {
         code: code,
         lang: language,
@@ -171,8 +173,7 @@ const CodeEditor = ({ p }) => {
           );
         }
       }
-    } catch (error) {
-      console.error("Submit failed:", error);
+    } else {
       navigate("/login", { state: { from: location }, replace: true });
     }
   };

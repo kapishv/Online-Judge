@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import "../css/Profile.css"; // Import the CSS file for custom styling
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ["#FFB300", "#008C99", "#E61919"];
 
 const Profile = () => {
   const { username } = useParams();

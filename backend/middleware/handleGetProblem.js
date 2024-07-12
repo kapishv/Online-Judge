@@ -7,6 +7,7 @@ const handleGetProblem = (req, res, next) => {
 
   // Check if Authorization header is present and starts with "Bearer "
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    console.log("Public request recieved");
     return problemsController.getProblem(req, res, next);
   }
 
@@ -14,7 +15,8 @@ const handleGetProblem = (req, res, next) => {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      return problemsController.getProblem(req, res, next);
+      console.error("JWT Error:", err.message);
+      return res.sendStatus(403); // invalid token
     }
 
     req.user = decoded.UserInfo.username;

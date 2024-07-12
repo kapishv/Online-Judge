@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { axiosPrivate } from "../api/axios";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -20,7 +20,6 @@ const Login = () => {
   const { manageAuth } = useContext(AuthContext);
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const userRef = useRef();
   const errRef = useRef();
@@ -43,7 +42,7 @@ const Login = () => {
       });
       const accessToken = response?.data?.accessToken;
       manageAuth(accessToken);
-      navigate(location.state?.from?.pathname || `/user/${values.username}`, {
+      navigate(`/user/${values.username}`, {
         replace: true,
       });
     } catch (err) {
