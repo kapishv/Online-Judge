@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import axios from "../api/axios";
+import { axiosPrivate } from "../api/axios";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
@@ -28,18 +28,11 @@ const Register = () => {
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
-      const response = await axios.post(
-        REGISTER_URL,
-        JSON.stringify({
-          username: values.username,
-          email: values.email,
-          password: values.password,
-        }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const response = await axiosPrivate.post(REGISTER_URL, {
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      });
       // Assuming registration response includes necessary data
       const accessToken = response?.data?.accessToken;
       manageAuth(accessToken);

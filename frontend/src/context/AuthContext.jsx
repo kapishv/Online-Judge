@@ -1,13 +1,14 @@
-import { createContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createContext, useState, useEffect, useContext } from "react";
 import { jwtDecode } from "jwt-decode";
-import axios from "../api/axios";
+import { axiosPrivate } from "../api/axios";
 
 const AuthContext = createContext({});
 
-export const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
 
+export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     user: null,
     accessToken: null,
@@ -41,9 +42,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const response = await axios("/logout", {
-        withCredentials: true,
-      });
+      await axiosPrivate.get("/logout");
       setAuth({
         user: null,
         accessToken: null,
@@ -57,16 +56,57 @@ export const AuthProvider = ({ children }) => {
 
   const refresh = async () => {
     try {
-      const response = await axios.get("/refresh", {
-        withCredentials: true,
-      });
+      const response = await axiosPrivate.get("/refresh");
       const accessToken = response?.data?.accessToken;
       manageAuth(accessToken);
       return accessToken;
     } catch (error) {
       console.error("Refresh failed", error);
+      throw error;
     }
   };
+
+  useEffect(() => {
+    // Request interceptor to add authorization header if missing
+    const requestInterceptor = axiosPrivate.interceptors.request.use(
+      async (config) => {
+        if (!config.headers["Authorization"]) {
+          const accessToken = auth.accessToken;
+          if (accessToken) {
+            config.headers["Authorization"] = `Bearer ${accessToken}`;
+          }
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    // Response interceptor to handle 403 errors
+    const responseInterceptor = axiosPrivate.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
+        if (error.response.status === 403 && !originalRequest._retry) {
+          originalRequest._retry = true;
+          try {
+            const newAccessToken = await refresh();
+            originalRequest.headers[
+              "Authorization"
+            ] = `Bearer ${newAccessToken}`;
+            return axiosPrivate(originalRequest);
+          } catch (err) {
+            return Promise.reject(err);
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axiosPrivate.interceptors.request.eject(requestInterceptor);
+      axiosPrivate.interceptors.response.eject(responseInterceptor);
+    };
+  }, [auth, refresh]);
 
   return (
     <AuthContext.Provider

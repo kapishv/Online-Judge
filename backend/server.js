@@ -24,11 +24,11 @@ app.use(credentials);
 // Cross Origin Resource Sharing
 app.use(cors(corsOptions));
 
-// built-in middleware to handle urlencoded form data
-app.use(express.urlencoded({ extended: false }));
+// Increase the limit for JSON payloads
+app.use(express.json({ limit: "10mb" }));
 
-// built-in middleware for json
-app.use(express.json());
+// Increase the limit for URL-encoded payloads
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 //middleware for cookies
 app.use(cookieParser());

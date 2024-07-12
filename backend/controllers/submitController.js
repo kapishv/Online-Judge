@@ -4,6 +4,7 @@ const User = require("../model/User");
 const Submission = require("../model/Submission");
 
 const handleFail = async (username, title, pass, error, lang, code) => {
+  console.error(`Test case ${pass + 1} : Failed`);
   if (!code) {
     code = "No Code!";
   }
@@ -18,6 +19,7 @@ const handleFail = async (username, title, pass, error, lang, code) => {
     lang,
     code,
   });
+  console.log("Submission failed");
   return { success: false, pass, error };
 };
 
@@ -26,25 +28,67 @@ const sanitizeString = (str) => {
 };
 
 const handleSubmit = async (req, res) => {
-  try {
-    if (!req?.params?.title)
-      return res.status(400).json({ message: "Problem title required" });
+  console.log("Received submit request");
 
-    const { title } = req.params;
-    const { lang, code } = req.body;
-    const problem = await Problem.findOne({ title }).exec();
-    const username = req.user;
+  if (!req?.params?.title)
+    return res.status(400).json({ message: "Problem title required" });
 
-    if (!problem) {
-      return res
-        .status(204)
-        .json({ message: `Problem title ${title} not found` });
-    }
+  const { title } = req.params;
+  const { lang, code } = req.body;
+  const problem = await Problem.findOne({ title }).exec();
+  const username = req.user;
 
-    let pass = 0;
+  console.log("User:", username);
+  console.log("Problem:", title);
+  console.log("Language:", lang);
+  console.log("Code:", code);
+
+  if (!problem) {
+    console.error(`Problem not found`);
+    return res
+      .status(204)
+      .json({ message: `Problem title ${title} not found` });
+  }
+
+  let pass = 0;
+  const response = await axios.post(
+    `http://${process.env.COMPILER_IP}:${process.env.COMPILER_PORT}/run`,
+    { lang, code, input: problem.sampleInput }
+  );
+
+  if (!response.data.success) {
+    const failResult = await handleFail(
+      username,
+      title,
+      pass,
+      response.data.error,
+      lang,
+      code
+    );
+    return res.status(200).json(failResult);
+  }
+
+  const sanitizedExpectedOutput = sanitizeString(problem.sampleOutput);
+  const sanitizedActualOutput = sanitizeString(response.data.output);
+
+  if (sanitizedActualOutput !== sanitizedExpectedOutput) {
+    const failResult = await handleFail(
+      username,
+      title,
+      pass,
+      "Wrong Answer",
+      lang,
+      code
+    );
+    return res.status(200).json(failResult);
+  }
+
+  pass++;
+  console.log("\x1b[32m%s\x1b[0m", `Test case ${pass} : Passed`);
+  for (const tc of problem.hiddenTestcases) {
     const response = await axios.post(
-      `http://localhost:${process.env.COMPILER_PORT}/run`,
-      { lang, code, input: problem.sampleInput }
+      `http://${process.env.COMPILER_IP}:${process.env.COMPILER_PORT}/run`,
+      { lang, code, input: tc.input }
     );
 
     if (!response.data.success) {
@@ -59,7 +103,7 @@ const handleSubmit = async (req, res) => {
       return res.status(200).json(failResult);
     }
 
-    const sanitizedExpectedOutput = sanitizeString(problem.sampleOutput);
+    const sanitizedExpectedOutput = sanitizeString(tc.output);
     const sanitizedActualOutput = sanitizeString(response.data.output);
 
     if (sanitizedActualOutput !== sanitizedExpectedOutput) {
@@ -75,77 +119,39 @@ const handleSubmit = async (req, res) => {
     }
 
     pass++;
-    for (const tc of problem.hiddenTestcases) {
-      const response = await axios.post(
-        `http://localhost:${process.env.COMPILER_PORT}/run`,
-        { lang, code, input: tc.input }
-      );
-
-      if (!response.data.success) {
-        const failResult = await handleFail(
-          username,
-          title,
-          pass,
-          response.data.error,
-          lang,
-          code
-        );
-        return res.status(200).json(failResult);
-      }
-
-      const sanitizedExpectedOutput = sanitizeString(tc.output);
-      const sanitizedActualOutput = sanitizeString(response.data.output);
-
-      if (sanitizedActualOutput !== sanitizedExpectedOutput) {
-        const failResult = await handleFail(
-          username,
-          title,
-          pass,
-          "Wrong Answer",
-          lang,
-          code
-        );
-        return res.status(200).json(failResult);
-      }
-
-      pass++;
-    }
-
-    // Check if problem is already solved by the user
-    const user = await User.findOne({ username }).exec();
-    const alreadySolved = user.solved.some(
-      (solvedProblem) => solvedProblem.title === title
-    );
-
-    if (!alreadySolved) {
-      user.solved.push({
-        title: problem.title,
-        difficulty: problem.difficulty,
-        codingScore: problem.codingScore,
-      });
-      await user.save();
-    }
-
-    await Submission.create({
-      username,
-      title,
-      status: {
-        success: true,
-        pass,
-        error: "None",
-      },
-      lang,
-      code,
-    });
-
-    res.status(200).json({ success: true, pass });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "An error occurred",
-      error: error.message,
-    });
+    console.log("\x1b[32m%s\x1b[0m", `Test case ${pass} : Passed`);
   }
+
+  // Check if problem is already solved by the user
+  const user = await User.findOne({ username }).exec();
+  const alreadySolved = user.solved.some(
+    (solvedProblem) => solvedProblem.title === title
+  );
+
+  if (!alreadySolved) {
+    user.solved.push({
+      title: problem.title,
+      difficulty: problem.difficulty,
+      codingScore: problem.codingScore,
+    });
+    await user.save();
+    console.log("First time problem solved");
+  }
+
+  await Submission.create({
+    username,
+    title,
+    status: {
+      success: true,
+      pass,
+      error: "None",
+    },
+    lang,
+    code,
+  });
+
+  console.log("Submission successful");
+  res.status(200).json({ success: true, pass });
 };
 
 module.exports = {

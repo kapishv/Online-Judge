@@ -2,10 +2,17 @@ import { useRef, useState, useEffect } from "react";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "../api/axios";
+import { axiosPrivate } from "../api/axios";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Container, Row, Col, Button, Alert, Form as BootstrapForm } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Alert,
+  Form as BootstrapForm,
+} from "react-bootstrap";
 
 const LOGIN_URL = "/auth";
 
@@ -30,17 +37,15 @@ const Login = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ username: values.username, password: values.password }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
+      const response = await axiosPrivate.post(LOGIN_URL, {
+        username: values.username,
+        password: values.password,
+      });
       const accessToken = response?.data?.accessToken;
       manageAuth(accessToken);
-      navigate(location.state?.from?.pathname || `/user/${values.username}`, { replace: true });
+      navigate(location.state?.from?.pathname || `/user/${values.username}`, {
+        replace: true,
+      });
     } catch (err) {
       if (!err?.response) {
         setErrMsg("No Server Response");
@@ -51,7 +56,7 @@ const Login = () => {
       } else {
         setErrMsg("Login Failed");
       }
-      errRef.current.focus();
+      // errRef.current.focus();
     } finally {
       setSubmitting(false);
     }

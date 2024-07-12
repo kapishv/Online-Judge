@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { axiosPrivate } from "../api/axios";
 import { FaTimes } from "react-icons/fa";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import "../css/EditProblemForm.css";
 
 import TagsInput from "react-tagsinput";
@@ -8,7 +8,6 @@ import "react-tagsinput/react-tagsinput.css";
 
 const EditProblemForm = ({ p, sp }) => {
   const navigate = useNavigate();
-  const { put, del } = useAxiosPrivate();
 
   // Function to handle adding a new hidden testcase
   const addHiddenTestcase = () => {
@@ -42,20 +41,11 @@ const EditProblemForm = ({ p, sp }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const action = e.nativeEvent.submitter.name;
-
     if (action === "update") {
-      const { makeRequest } = put(
-        `/problemset/${location.pathname.split("/").pop()}`,
-        p
-      );
-      await makeRequest();
+      await axiosPrivate.put(`/problemset/${p.title}`, p);
     } else if (action === "delete") {
-      const { makeRequest } = del(
-        `/problemset/${location.pathname.split("/").pop()}`
-      );
-      await makeRequest();
+      await axiosPrivate.delete(`/problemset/${p.title}`);
     }
-
     navigate("/problemset");
   };
 
@@ -187,7 +177,11 @@ const EditProblemForm = ({ p, sp }) => {
             />
           </div>
         ))}
-        <button type="button" className="add-hidden-testcase" onClick={addHiddenTestcase}>
+        <button
+          type="button"
+          className="add-hidden-testcase"
+          onClick={addHiddenTestcase}
+        >
           Add Hidden Testcase
         </button>
         <label htmlFor="explanation">Explanation (Optional):</label>

@@ -18,6 +18,9 @@ const getClassName = (code) => {
 
 const handleJavaRun = async (code, input) => {
   const cleanup = (jobID, files) => {
+    if (!jobID) {
+      return; // If jobID is undefined or falsy, do nothing
+    }
     files.forEach((file) => fs.existsSync(file) && fs.unlinkSync(file));
     const jobCodeDir = path.join(codeDir, jobID);
     const jobOutputDir = path.join(outputDir, jobID);

@@ -1,29 +1,22 @@
 import { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axios from "../api/axios";
 import "../css/Leaderboard.css";
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
-  const { get } = useAxiosPrivate();
 
   useEffect(() => {
-    const { makeRequest, cleanup } = get("/leaderboard");
-
     const fetchLeaderboardData = async () => {
-      const data = await makeRequest();
+      const response = await axios.get("/leaderboard");
+      const data = response.data;
       if (data) {
         const formattedData = formatLeaderboardData(data);
         setLeaderboardData(formattedData);
       }
     };
-
     fetchLeaderboardData();
-
-    return () => {
-      cleanup();
-    };
   }, []);
 
   const formatLeaderboardData = (data) => {

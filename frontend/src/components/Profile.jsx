@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Container, Row, Col, ListGroup, Card } from "react-bootstrap";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axios from "../api/axios";
 import Miss from "./Miss";
 import {
   PieChart,
@@ -17,24 +17,17 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const Profile = () => {
   const { username } = useParams();
-  const [userData, setUserData] = useState(null);
-  const { get } = useAxiosPrivate();
+  const [userData, setUserData] = useState();
 
   useEffect(() => {
-    const { makeRequest, cleanup } = get(`/user/${username}`);
-
     const fetchUserData = async () => {
-      const data = await makeRequest();
+      const response = await axios.get(`/user/${username}`);
+      const data = response.data;
       if (data) {
         setUserData(data);
       }
     };
-
     fetchUserData();
-
-    return () => {
-      cleanup();
-    };
   }, [username]);
 
   if (!userData) {

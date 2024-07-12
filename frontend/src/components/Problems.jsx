@@ -7,32 +7,25 @@ import {
   InputGroup,
   ListGroup,
 } from "react-bootstrap";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axios from "../api/axios";
 import Problem from "./Problem";
-import '../css/Problems.css';
+import "../css/Problems.css";
 
 const Problems = () => {
   const [problems, setProblems] = useState([]);
-  const { get } = useAxiosPrivate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProblems, setFilteredProblems] = useState(problems);
   const [sortBy, setSortBy] = useState("codingScore");
 
   useEffect(() => {
-    const { makeRequest, cleanup } = get("/problemset");
-
     const fetchProblems = async () => {
-      const data = await makeRequest();
+      const response = await axios.get("/problemset");
+      const data = response.data;
       if (data) {
         setProblems(data);
       }
     };
-
     fetchProblems();
-
-    return () => {
-      cleanup();
-    };
   }, []);
 
   useEffect(() => {

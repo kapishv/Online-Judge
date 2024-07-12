@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { axiosPrivate } from "../api/axios";
 import "../css/NewProblemForm.css";
 
 import TagsInput from "react-tagsinput";
@@ -8,7 +8,6 @@ import "react-tagsinput/react-tagsinput.css";
 
 const NewProblemForm = ({ p, sp }) => {
   const navigate = useNavigate();
-  const { post } = useAxiosPrivate();
 
   // Function to handle adding a new hidden testcase
   const addHiddenTestcase = () => {
@@ -41,8 +40,7 @@ const NewProblemForm = ({ p, sp }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { makeRequest } = post("/problemset", p);
-    await makeRequest();
+    await axiosPrivate.post("/problemset", p);
     navigate("/problemset");
   };
 

@@ -4,14 +4,13 @@ import { useParams } from "react-router-dom";
 import ProblemPage from "./ProblemPage";
 import CodeEditor from "./CodeEditor";
 import Miss from "./Miss";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import "../css/ResizeHandler.css";
+import axios from "../api/axios";
 
 function Codespace() {
   const { title } = useParams();
   const [problem, setProblem] = useState(null);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1000);
-  const { get } = useAxiosPrivate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,20 +24,14 @@ function Codespace() {
   }, []);
 
   useEffect(() => {
-    const { makeRequest, cleanup } = get(`/problemset/${title}`);
-
     const fetchProblems = async () => {
-      const data = await makeRequest();
+      const response = await axios.get(`/problemset/${title}`);
+      const data = response.data;
       if (data) {
         setProblem(data);
       }
     };
-
     fetchProblems();
-
-    return () => {
-      cleanup();
-    };
   }, [title]);
 
   if (problem) {
@@ -57,7 +50,7 @@ function Codespace() {
             <ProblemPage p={problem} />
           </div>
           <div>
-            <CodeEditor />
+            <CodeEditor p={problem} />
           </div>
         </div>
       );
@@ -82,7 +75,7 @@ function Codespace() {
           maxSize={70}
           style={{ overflow: "auto", height: `calc(100vh - 130px)` }}
         >
-          <CodeEditor />
+          <CodeEditor p={problem} />
         </Panel>
       </PanelGroup>
     );

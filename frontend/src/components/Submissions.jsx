@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { axiosPrivate } from "../api/axios";
 import {
   Container,
   Row,
@@ -7,32 +8,24 @@ import {
   InputGroup,
   ListGroup,
 } from "react-bootstrap";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Submission from "./Submission";
 import "../css/Submissions.css";
 
 const Submissions = () => {
   const [submissions, setSubmissions] = useState([]);
-  const { get } = useAxiosPrivate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredSubmissions, setFilteredSubmissions] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("all");
 
   useEffect(() => {
-    const { makeRequest, cleanup } = get("/submissions");
-
     const fetchSubmissions = async () => {
-      const data = await makeRequest();
+      const response = await axiosPrivate.get("/submissions");
+      const data = response.data;
       if (data) {
         setSubmissions(data);
       }
     };
-
     fetchSubmissions();
-
-    return () => {
-      cleanup();
-    };
   }, []);
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { axiosPrivate } from "../api/axios";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   FaSpinner,
   FaSun,
@@ -17,7 +18,7 @@ import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/theme-monokai";
 import "../css/CodeEditor.css";
 
-const CodeEditor = () => {
+const CodeEditor = ({ p }) => {
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("java");
   const [theme, setTheme] = useState("github");
@@ -30,7 +31,8 @@ const CodeEditor = () => {
   const verdictRef = useRef(null);
   const inputRef = useRef(null);
 
-  const { post } = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (outputRef.current) {
@@ -77,36 +79,40 @@ const CodeEditor = () => {
         <FaSpinner className="spinner" />
       </div>
     );
-    const { makeRequest } = post("/run", {
-      input: inputText,
-      code: code,
-      lang: language,
-    });
-    const data = await makeRequest();
-    if (data) {
-      if (data.success) {
-        setOutputText(
-          <div className="output-div">
-            <span className="info-text">Result:</span>
-            <span className="result-success">Successful</span>
-            <br />
-            <span className="info-text">Output:</span>
-            <br />
-            <pre className="output-text">{data.output}</pre>
-          </div>
-        );
-      } else {
-        setOutputText(
-          <div className="output-div">
-            <span className="info-text">Result:</span>
-            <span className="result-error">{data.error}</span>
-            <br />
-            <span className="info-text">Output:</span>
-            <br />
-            <pre className="output-text">{data.output}</pre>
-          </div>
-        );
+    try {
+      const response = await axiosPrivate.post("/run", {
+        input: inputText,
+        code: code,
+        lang: language,
+      });
+      const data = response.data;
+      if (data) {
+        if (data.success) {
+          setOutputText(
+            <div className="output-div">
+              <span className="info-text">Result:</span>
+              <span className="result-success">Successful</span>
+              <br />
+              <span className="info-text">Output:</span>
+              <br />
+              <pre className="output-text">{data.output}</pre>
+            </div>
+          );
+        } else {
+          setOutputText(
+            <div className="output-div">
+              <span className="info-text">Result:</span>
+              <span className="result-error">{data.error}</span>
+              <br />
+              <span className="info-text">Output:</span>
+              <br />
+              <pre className="output-text">{data.output}</pre>
+            </div>
+          );
+        }
       }
+    } catch (error) {
+      navigate("/login", { state: { from: location }, replace: true });
     }
   };
 
@@ -119,53 +125,55 @@ const CodeEditor = () => {
         <FaSpinner className="spinner" />
       </div>
     );
-    const { makeRequest } = post(
-      `/submit/${location.pathname.split("/").pop()}`,
-      {
+    try {
+      const response = await axiosPrivate.post(`/submit/${p.title}`, {
         code: code,
         lang: language,
-      }
-    );
-    const data = await makeRequest();
-    if (data) {
-      if (data.success) {
-        setVerdictText(
-          <div className="verdict-div">
-            <span className="info-text">Result:</span>
-            <span className="result-success">Accepted</span>
-            <br />
-            <span className="info-text">Testcases:</span>
-            <br />
-            <span className="test-cases">
-              {Array.from({ length: data.pass }, (_, i) => (
-                <span key={i} className="test-case-success">
-                  Test case {i + 1}
-                </span>
-              ))}
-            </span>
-          </div>
-        );
-      } else {
-        setVerdictText(
-          <div className="verdict-div">
-            <span className="info-text">Result:</span>
-            <span className="result-error">{data.error}</span>
-            <br />
-            <span className="info-text">Testcases:</span>
-            <br />
-            <span className="test-cases">
-              {Array.from({ length: data.pass }, (_, i) => (
-                <span key={i} className="test-case-success">
-                  Test case {i + 1}
-                </span>
-              ))}
-              <span className="test-case-failure">
-                Test case {data.pass + 1}
+      });
+      const data = response.data;
+      if (data) {
+        if (data.success) {
+          setVerdictText(
+            <div className="verdict-div">
+              <span className="info-text">Result:</span>
+              <span className="result-success">Accepted</span>
+              <br />
+              <span className="info-text">Testcases:</span>
+              <br />
+              <span className="test-cases">
+                {Array.from({ length: data.pass }, (_, i) => (
+                  <span key={i} className="test-case-success">
+                    Test case {i + 1}
+                  </span>
+                ))}
               </span>
-            </span>
-          </div>
-        );
+            </div>
+          );
+        } else {
+          setVerdictText(
+            <div className="verdict-div">
+              <span className="info-text">Result:</span>
+              <span className="result-error">{data.error}</span>
+              <br />
+              <span className="info-text">Testcases:</span>
+              <br />
+              <span className="test-cases">
+                {Array.from({ length: data.pass }, (_, i) => (
+                  <span key={i} className="test-case-success">
+                    Test case {i + 1}
+                  </span>
+                ))}
+                <span className="test-case-failure">
+                  Test case {data.pass + 1}
+                </span>
+              </span>
+            </div>
+          );
+        }
       }
+    } catch (error) {
+      console.error("Submit failed:", error);
+      navigate("/login", { state: { from: location }, replace: true });
     }
   };
 

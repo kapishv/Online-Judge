@@ -25,7 +25,7 @@ const PersistLogin = () => {
     })();
 
     return () => (isMounted = false);
-  }, [auth, refresh]);
+  }, []);
 
   return isLoading ? <Loading /> : <Layout />;
 };

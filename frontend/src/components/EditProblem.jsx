@@ -1,17 +1,16 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { axiosPrivate } from "../api/axios";
 import ProblemPage from "./ProblemPage";
 import EditProblemForm from "./EditProblemForm";
 import Miss from "./Miss";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import "../css/ResizeHandler.css";
 
 function EditProblem() {
   const { title } = useParams();
   const [problem, setProblem] = useState(null);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1000);
-  const { get } = useAxiosPrivate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,20 +24,14 @@ function EditProblem() {
   }, []);
 
   useEffect(() => {
-    const { makeRequest, cleanup } = get(`/problemset/${title}`);
-
     const fetchProblems = async () => {
-      const data = await makeRequest();
+      const response = await axiosPrivate.get(`/problemset/${title}`);
+      const data = response.data;
       if (data) {
         setProblem(data);
       }
     };
-
     fetchProblems();
-
-    return () => {
-      cleanup();
-    };
   }, [title]);
 
   if (problem) {

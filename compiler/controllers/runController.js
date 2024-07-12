@@ -4,22 +4,31 @@ const { handleJavaRun } = require("./handleJavaRun.js");
 
 const handleRun = async (req, res) => {
   const { lang = "c_cpp", code, input } = req.body;
+
+  console.log("Received run request");
+  console.log("Language:", lang);
+  console.log("Code:", code);
+  console.log("Input:", input);
+
   try {
+    let result;
     if (lang === "c_cpp") {
-      const result = await handleCppRun(code, input);
-      res.status(200).json(result);
+      result = await handleCppRun(code, input);
     } else if (lang === "python") {
-      const result = await handlePythonRun(code, input);
-      res.status(200).json(result);
+      result = await handlePythonRun(code, input);
     } else if (lang === "java") {
-      const result = await handleJavaRun(code, input);
-      res.status(200).json(result);
+      result = await handleJavaRun(code, input);
     } else {
-      res
+      console.log("Unsupported language");
+      return res
         .status(200)
         .json({ success: false, error: `Unsupported language: ${lang}` });
     }
+
+    console.log("Code execution result:", result);
+    res.status(200).json(result);
   } catch (error) {
+    console.error("Error during code execution:", error);
     res.status(500).send(error.message);
   }
 };

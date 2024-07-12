@@ -9,7 +9,7 @@ function NewProblem() {
   const [problem, setProblem] = useState({
     title: "Problem Title",
     difficulty: "Easy",
-    codingScore: 800,
+    codingScore: 2,
     tags: ["Add a tag"],
     description: "Description of the problem",
     inputFormat: "Input Format of the problem",

@@ -2,6 +2,8 @@
 node_modules
 package-lock.json
 .DS_Store
+AWSCLIV2.pkg
+keys
 logs
 py
 cpp

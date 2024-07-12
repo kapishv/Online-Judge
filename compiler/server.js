@@ -11,20 +11,20 @@ app.use(logger);
 // Cross Origin Resource Sharing
 app.use(cors(corsOptions));
 
-// built-in middleware to handle urlencoded form data
-app.use(express.urlencoded({ extended: false }));
+// built-in middleware to handle urlencoded form data with increased limit
+app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 
-// built-in middleware for json
-app.use(express.json());
+// built-in middleware for json with increased limit
+app.use(express.json({ limit: "10mb" }));
 
 // routes
 app.get("/", (req, res) => {
-    res.json({ online: 'compiler' });
+  res.json({ online: "compiler" });
 });
 
 app.use("/run", require("./routes/run"));
 
-// routes after jwt verification 
+// routes after jwt verification
 
 app.all("*", (req, res) => {
   res.status(404).json({ error: "404 Not Found" });
@@ -33,5 +33,5 @@ app.all("*", (req, res) => {
 app.use(errorHandler);
 
 app.listen(3000, () => {
-    console.log("Server is listening on port 3000!");
+  console.log("Server is listening on port 3000!");
 });

@@ -19,16 +19,14 @@ const handleGetProblem = (req, res, next) => {
 
     req.user = decoded.UserInfo.username;
     req.roles = decoded.UserInfo.roles;
-    console.log("JWT Verification Done!");
+    console.log("JWT Verified");
     console.log("User:", req.user);
     console.log("Roles:", req.roles);
 
     // Check if user has admin role
     if (req.roles.includes(ROLES_LIST.Admin)) {
-      console.log("Admin role detected");
       return problemsController.getFullProblem(req, res, next);
     } else {
-      console.log("Non-admin role detected");
       return problemsController.getProblem(req, res, next);
     }
   });
