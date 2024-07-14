@@ -1,12 +1,11 @@
 const User = require("../model/User");
 
 const handleLogout = async (req, res) => {
-  // On client, also delete the accessToken
-  console.log("Received logout request");
+  console.log("\x1b[33mReceived logout request\x1b[0m"); // Yellow for Received logout request
   const cookies = req.cookies;
 
   if (!cookies?.jwt) {
-    console.error("No jwt cookie found");
+    console.error("\x1b[31mNo jwt cookie found\x1b[0m"); // Red for No jwt cookie found
     return res.sendStatus(204); // No content
   }
 
@@ -14,13 +13,13 @@ const handleLogout = async (req, res) => {
 
   // Is refreshToken in db?
   const foundUser = await User.findOne({ refreshToken }).exec();
-  
+
   if (!foundUser) {
-    console.error("User not found");
+    console.error("\x1b[31mUser not found\x1b[0m"); // Red for User not found
     res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
     return res.sendStatus(204);
   }
-  console.log("User found"); // Log found user for debugging
+  console.log("\x1b[32mUser found\x1b[0m"); // Green for User found
 
   // Delete refreshToken in db
   foundUser.refreshToken = foundUser.refreshToken.filter(
@@ -28,7 +27,9 @@ const handleLogout = async (req, res) => {
   );
   await foundUser.save();
 
-  console.log("Refresh token successfully deleted from database");
+  console.log(
+    "\x1b[32mRefresh token successfully deleted from database\x1b[0m"
+  ); // Green for Refresh token successfully deleted from database
 
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   res.sendStatus(200);

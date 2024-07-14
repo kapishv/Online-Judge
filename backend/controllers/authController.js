@@ -5,11 +5,11 @@ const jwt = require("jsonwebtoken");
 const handleLogin = async (req, res) => {
   const { username, password } = req.body;
 
-  console.log("Received login request");
-  console.log("Username:", username);
+  console.log("\x1b[33mReceived login request\x1b[0m"); // Yellow for Received
+  console.log("\x1b[36mUsername:\x1b[0m", username); // Cyan for Username
 
   if (!username || !password) {
-    console.error("Username or password missing");
+    console.error("\x1b[31mUsername or password missing\x1b[0m"); // Red for username or password missing
     return res
       .status(400)
       .json({ message: "Username and password are required." });
@@ -18,20 +18,20 @@ const handleLogin = async (req, res) => {
   const foundUser = await User.findOne({ username: username }).exec();
 
   if (!foundUser) {
-    console.error("User not found");
+    console.error("\x1b[31mUser not found\x1b[0m"); // Red for username not found
     return res.sendStatus(401); // Unauthorized
   }
 
-  console.log("User found");
+  console.log("\x1b[32mUser found\x1b[0m"); // Green for user found
 
   // Evaluate password
   const match = await bcrypt.compare(password, foundUser.password);
 
   if (match) {
-    console.log("Password match");
+    console.log("\x1b[32mPassword match\x1b[0m"); // Green for password match
 
     const roles = Object.values(foundUser.roles).filter(Boolean);
-    console.log("Roles:", roles);
+    console.log("\x1b[36mRoles:\x1b[0m", roles); // Cyan for roles
 
     // Create JWTs
     const accessToken = jwt.sign(
@@ -66,7 +66,7 @@ const handleLogin = async (req, res) => {
     // Send authorization roles and access token to user
     res.json({ accessToken });
   } else {
-    console.error("Password does not match");
+    console.error("\x1b[31mPassword does not match\x1b[0m"); // Red for password does not match
     res.sendStatus(401);
   }
 };

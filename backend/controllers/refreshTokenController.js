@@ -3,9 +3,9 @@ const jwt = require("jsonwebtoken");
 
 const handleRefreshToken = async (req, res) => {
   const cookies = req.cookies;
-  console.log("Received refresh request");
+  console.log("\x1b[33mReceived refresh request\x1b[0m"); // Yellow for Received refresh request
   if (!cookies?.jwt) {
-    console.error("No JWT found");
+    console.error("\x1b[31mNo JWT found\x1b[0m"); // Red for No JWT found
     return res.sendStatus(401);
   }
 
@@ -16,13 +16,13 @@ const handleRefreshToken = async (req, res) => {
   }).exec();
 
   if (!foundUser) {
-    console.error("User not found");
+    console.error("\x1b[31mUser not found\x1b[0m"); // Red for User not found
     return res.sendStatus(403); // Forbidden
   }
 
-  console.log("Found User:", foundUser.username); // Logging found user
+  console.log("\x1b[32mFound User:\x1b[0m", foundUser.username); // Green for Found User
   const roles = Object.values(foundUser.roles).filter(Boolean);
-  console.log("Roles:", roles); // Logging user roles
+  console.log("\x1b[36mRoles:\x1b[0m", roles); // Cyan for Roles
 
   const newRefreshToken = jwt.sign(
     { username: foundUser.username },
@@ -34,7 +34,7 @@ const handleRefreshToken = async (req, res) => {
     rt === oldRefreshToken ? newRefreshToken : rt
   );
   await foundUser.save();
-  console.log("Successfully updated user's refresh tokens.");
+  console.log("\x1b[32mSuccessfully updated user's refresh tokens.\x1b[0m"); // Green for Successfully updated user's refresh tokens
 
   const accessToken = jwt.sign(
     {

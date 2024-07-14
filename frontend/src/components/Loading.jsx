@@ -1,9 +1,10 @@
+import Rendering from "./Rendering"
 
 const Loading = () => {
   return (
-    <div>
-      <p>Loading...</p>
-    </div>
+    //rendering navbar
+    <Rendering/>
+    //rendering footer
   )
 }
 

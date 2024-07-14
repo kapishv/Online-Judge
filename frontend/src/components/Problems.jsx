@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Container,
   Row,
@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import axios from "../api/axios";
 import Problem from "./Problem";
+import Rendering from "./Rendering"; // Import the Rendering component
 import "../css/Problems.css";
 
 const Problems = () => {
@@ -16,13 +17,24 @@ const Problems = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProblems, setFilteredProblems] = useState(problems);
   const [sortBy, setSortBy] = useState("codingScore");
+  const [loading, setLoading] = useState(true); // Add loading state
+  const isMounted = useRef(false); // Add ref to track if component is mounted
 
   useEffect(() => {
     const fetchProblems = async () => {
-      const response = await axios.get("/problemset");
-      const data = response.data;
-      if (data) {
-        setProblems(data);
+      if (isMounted.current) return; // Prevents the function from running more than once
+      isMounted.current = true; // Set the ref to true after the first run
+
+      try {
+        const response = await axios.get("/problemset");
+        const data = response.data;
+        if (data) {
+          setProblems(data);
+        }
+      } catch (error) {
+        console.error("Error fetching problems:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
     fetchProblems();
@@ -69,6 +81,10 @@ const Problems = () => {
     });
     return sorted;
   };
+
+  if (loading) {
+    return <Rendering />; // Show the Rendering component when loading
+  }
 
   return (
     <Container className="problems-list-container">

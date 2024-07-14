@@ -1,19 +1,31 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
+import Rendering from "./Rendering";
 import { Link } from "react-router-dom";
 import axios from "../api/axios";
 import "../css/Leaderboard.css";
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const isMounted = useRef(false); // Add ref to track if component is mounted
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
-      const response = await axios.get("/leaderboard");
-      const data = response.data;
-      if (data) {
-        const formattedData = formatLeaderboardData(data);
-        setLeaderboardData(formattedData);
+      if (isMounted.current) return; // Prevents the function from running more than once
+      isMounted.current = true; // Set the ref to true after the first run
+
+      try {
+        const response = await axios.get("/leaderboard");
+        const data = response.data;
+        if (data) {
+          const formattedData = formatLeaderboardData(data);
+          setLeaderboardData(formattedData);
+        }
+      } catch (error) {
+        console.error("Error fetching leaderboard data:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
     fetchLeaderboardData();
@@ -48,6 +60,10 @@ const Leaderboard = () => {
       })
       .sort((a, b) => b.totalCodingScore - a.totalCodingScore);
   };
+
+  if (loading) {
+    return <Rendering />;
+  }
 
   return (
     <Container className="leaderboard-container">

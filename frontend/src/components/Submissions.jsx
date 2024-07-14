@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { axiosPrivate } from "../api/axios";
 import {
   Container,
@@ -9,6 +9,7 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import Submission from "./Submission";
+import Rendering from "./Rendering"; // Import the Rendering component
 import "../css/Submissions.css";
 
 const Submissions = () => {
@@ -16,13 +17,24 @@ const Submissions = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredSubmissions, setFilteredSubmissions] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState("all");
+  const [loading, setLoading] = useState(true); // Add loading state
+  const isMounted = useRef(false); // Add ref to track if component is mounted
 
   useEffect(() => {
     const fetchSubmissions = async () => {
-      const response = await axiosPrivate.get("/submissions");
-      const data = response.data;
-      if (data) {
-        setSubmissions(data);
+      if (isMounted.current) return; // Prevents the function from running more than once
+      isMounted.current = true; // Set the ref to true after the first run
+
+      try {
+        const response = await axiosPrivate.get("/submissions");
+        const data = response.data;
+        if (data) {
+          setSubmissions(data);
+        }
+      } catch (error) {
+        console.error("Error fetching submissions:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
     fetchSubmissions();
@@ -59,6 +71,10 @@ const Submissions = () => {
 
     setFilteredSubmissions(filtered);
   };
+
+  if (loading) {
+    return <Rendering />; // Show the Rendering component when loading
+  }
 
   return (
     <Container className="submissions-list-container">

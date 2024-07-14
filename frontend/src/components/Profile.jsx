@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Container, Row, Col, ListGroup, Card } from "react-bootstrap";
+import Rendering from "./Rendering";
 import axios from "../api/axios";
 import Miss from "./Miss";
 import {
@@ -13,22 +14,35 @@ import {
 } from "recharts";
 import "../css/Profile.css"; // Import the CSS file for custom styling
 
-const COLORS = ["#FFB300", "#008C99", "#E61919"];
+const COLORS = ["#008C99", "#FFB300", "#E61919"];
 
 const Profile = () => {
   const { username } = useParams();
   const [userData, setUserData] = useState();
+  const [loading, setLoading] = useState(true); // Add loading state
+  const isMounted = useRef(false); // Add ref to track if component is mounted
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const response = await axios.get(`/user/${username}`);
-      const data = response.data;
-      if (data) {
+      if (isMounted.current) return; // Prevents the function from running more than once
+      isMounted.current = true; // Set the ref to true after the first run
+
+      try {
+        const response = await axios.get(`/user/${username}`);
+        const data = response.data;
         setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
     fetchUserData();
   }, [username]);
+
+  if (loading) {
+    return <Rendering />;
+  }
 
   if (!userData) {
     return <Miss />;
@@ -62,7 +76,7 @@ const Profile = () => {
         dy={8}
         textAnchor="middle"
         fill="#000"
-        style={{ fontSize: "24px", fontWeight: "bold" }}
+        style={{ fontSize: "35px", fontFamily: "Source Code" }}
       >
         {totalProblemsSolved}
       </text>

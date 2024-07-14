@@ -1,6 +1,7 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import Rendering from "./Rendering";
 import ProblemPage from "./ProblemPage";
 import CodeEditor from "./CodeEditor";
 import Miss from "./Miss";
@@ -10,7 +11,9 @@ import axios from "../api/axios";
 function Codespace() {
   const { title } = useParams();
   const [problem, setProblem] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1000);
+  const isMounted = useRef(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,14 +28,27 @@ function Codespace() {
 
   useEffect(() => {
     const fetchProblems = async () => {
-      const response = await axios.get(`/problemset/${title}`);
-      const data = response.data;
-      if (data) {
-        setProblem(data);
+      if (isMounted.current) return;
+      isMounted.current = true;
+
+      try {
+        const response = await axios.get(`/problemset/${title}`);
+        const data = response.data;
+        if (data) {
+          setProblem(data);
+        }
+      } catch (error) {
+        console.error("Error fetching problem data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProblems();
   }, [title]);
+
+  if (loading) {
+    return <Rendering />;
+  }
 
   if (problem) {
     if (isSmallScreen) {
@@ -80,6 +96,7 @@ function Codespace() {
       </PanelGroup>
     );
   }
+
   return <Miss />;
 }
 

@@ -33,6 +33,9 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 //middleware for cookies
 app.use(cookieParser());
 
+app.get("/", (req, res) => {
+  res.json({ online: "judge" });
+});
 // routes
 app.use("/register", require("./routes/register"));
 app.use("/auth", require("./routes/auth"));

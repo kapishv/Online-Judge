@@ -1,3 +1,3 @@
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 
 module.exports = allowedOrigins;

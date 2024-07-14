@@ -1,33 +1,31 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import AuthContext from "../context/AuthContext";
 import Loading from "./Loading";
 import Layout from "./Layout";
 
 const PersistLogin = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const { auth, refresh } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    let isMounted = true;
-
-    (async () => {
-      if (!auth?.accessToken) {
-        try {
-          await refresh();
-        } catch (err) {
-          console.error(err);
-        } finally {
-          if (isMounted) setIsLoading(false);
-        }
-      } else {
-        setIsLoading(false);
+    const verifyAuth = async () => {
+      if (isMounted.current) return;
+      isMounted.current = true;
+      try {
+        await refresh();
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-    })();
+    };
+    if (!auth?.accessToken) {
+      verifyAuth();
+    }
+  }, [auth, refresh]);
 
-    return () => (isMounted = false);
-  }, []);
-
-  return isLoading ? <Loading /> : <Layout />;
+  return loading ? <Loading /> : <Layout />;
 };
 
 export default PersistLogin;
