@@ -1,5 +1,7 @@
 # Online Judge CodeCraft
 
+https://github.com/user-attachments/assets/493395a8-c738-493e-b1e5-f3a572ad4c23
+
 ## Problem Statement
 
 An Online Judge is a platform where coding enthusiasts and competitive programmers can practice and improve their coding skills. Users can solve coding problems, submit their solutions, and get feedback on how correct and efficient their code is. The platform also has a leaderboard to encourage competition and makes sure that code submissions are run safely and efficiently. Some popular online judges are LeetCode, HackerRank, and Codeforces.
